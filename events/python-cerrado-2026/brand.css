@@ -1,0 +1,32 @@
+/* Python Cerrado 2026: marrom, creme, verde e ocre, do site pythoncerrado.org/2026. */
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap");
+
+:root {
+  --bg: #3b2a1e;
+  --text: #f4f1ea;
+  --muted: #d9c9b6;
+  --accent: #6fcfae;
+  --link: #7fd6b8;
+  --card: #4a3627;
+  --card-outline: #6b5440;
+  --image-outline: #6b5440;
+  --fill: #f2b544;
+  --on-fill: #3b2a1e;
+  --fill-edge: #f2b544;
+  --font-head: "Outfit", sans-serif;
+  --font-body: "Outfit", sans-serif;
+  --font-code: "JetBrains Mono", monospace;
+}
+
+/* Ocre sobre creme fica em 1,5:1: no claro, o ocre é só preenchimento, com texto e borda marrons. */
+section.light {
+  --bg: #f1e6d4;
+  --text: #3b2a1e;
+  --muted: #55504a;
+  --accent: #0f6b55;
+  --link: #0f6b55;
+  --card: #faf5ec;
+  --card-outline: #d9c9b6;
+  --image-outline: #c8c2b6;
+  --fill-edge: #3b2a1e;
+}

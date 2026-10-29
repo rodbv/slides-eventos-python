@@ -1,0 +1,12 @@
+{
+  "nome": "Python Cerrado 2026",
+  "nomeCurto": "Python Cerrado",
+  "selo": "6 e 7\nde novembro\nde 2026\n{Brasília/DF}",
+  "site": "https://pythoncerrado.org/2026",
+  "rodape": "Python Cerrado 2026",
+  "organizacao": "Python Cerrado",
+  "titulosMaiusculos": false,
+  "corDestaque": "ocre",
+  "conduta": { "de": "da Python Cerrado", "endereco": "pythoncerrado.org/2026/sobre/codigo-de-conduta" },
+  "logo": { "escuro": "assets/logo-escuro.png", "claro": "assets/logo-claro.png", "alt": "Python Cerrado" }
+}

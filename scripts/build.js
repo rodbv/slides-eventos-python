@@ -9,11 +9,14 @@ const path = require("path");
 const ROOT = path.resolve(__dirname, "..");
 const slugs = process.argv.slice(2);
 const all = fs.readdirSync(path.join(ROOT, "events")).filter((name) => !name.startsWith("_"));
+const node = (script, ...args) => execFileSync("node", [path.join(ROOT, script), ...args], { stdio: "inherit", cwd: ROOT });
 
 for (const slug of slugs.length ? slugs : all) {
   if (!all.includes(slug)) throw new Error(`events/${slug} does not exist`);
-  for (const step of ["core/pptx/build.js", "core/pptx/render.js", "core/marp/build.js"]) {
-    execFileSync("node", [path.join(ROOT, step), slug], { stdio: "inherit", cwd: ROOT });
+  for (const version of ["escuro", "claro"]) {
+    node("core/pptx/build.js", slug, version);
+    node("core/pptx/render.js", slug, version);
   }
+  node("core/marp/build.js", slug);
 }
-execFileSync("node", [path.join(__dirname, "site.js")], { stdio: "inherit", cwd: ROOT });
+node("scripts/site.js");

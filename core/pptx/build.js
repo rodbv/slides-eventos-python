@@ -1,7 +1,8 @@
-// Builds dist/<event>/<event>.pptx: a themed deck whose layouts carry the brand of the
-// event folder given as the first argument, with one example slide per layout.
+// Builds dist/<event>/<event>-<escuro|claro>.pptx: a themed deck whose layouts carry the
+// brand of the event folder given as the first argument. Both files hold the layouts of
+// both versions, so a speaker can switch a slide; the example slides use the version asked for.
 //
-//   node core/pptx/build.js python-brasil-2026
+//   node core/pptx/build.js python-brasil-2026 claro
 const path = require("path");
 const fs = require("fs");
 const pptxgen = require("pptxgenjs");
@@ -16,12 +17,13 @@ const { loadEvent } = require("../event");
 
 const ROOT = path.resolve(__dirname, "../..");
 const SLUG = process.argv[2];
-if (!SLUG) throw new Error("usage: node core/pptx/build.js <event folder name>");
+const VERSION = process.argv[3] || "escuro";
+if (!SLUG || !["escuro", "claro"].includes(VERSION)) throw new Error("usage: node core/pptx/build.js <event folder name> [escuro|claro]");
 const EVENT = loadEvent(ROOT, SLUG);
 const EV = EVENT.event;
 const DIST = path.join(ROOT, "dist", SLUG);
 const BUILD = path.join(ROOT, "build", SLUG);
-const OUT = path.join(DIST, `${SLUG}.pptx`);
+const OUT = path.join(DIST, `${SLUG}-${VERSION}.pptx`);
 
 const BRAND_DARK = EVENT.dark;
 const BRAND_LIGHT = EVENT.light;
@@ -68,7 +70,7 @@ const shotBox = (i) => ({ x: M + i * (SHOT.w + SHOT_GAP), y: BODY.y, ...SHOT });
 const TEXT_W = 8.0; // keeps body lines under about 60 characters at 20 pt
 const FOOTER_Y = 5.15;
 const LANG = "pt-BR";
-const NOTES = require(`./notes.${LANG}.js`)(EV, BRAND_DARK);
+const NOTES = require(`./notes.${LANG}.js`)(EV, BRAND_DARK, VERSION);
 const { CAPS_SPACING, capitalizeMarkedRuns } = require("./lib/caps");
 
 const pres = new pptxgen();
@@ -116,6 +118,7 @@ function mode(brand, suffix, side) {
     limeEdgeHex: brand["fill-edge"],
     accent: scheme(brand.accent),
     accentHex: brand.accent,
+    linkHex: brand.link,
     watermark: watermark && resized(watermark.file, { height: 700 }),
     watermarkRatio: watermark && 1 / watermark.ratio,
     lockup: resized(logo.file, { width: 1600 }),
@@ -124,6 +127,7 @@ function mode(brand, suffix, side) {
 }
 const DARK = mode(BRAND_DARK, "", "dark");
 const LIGHT = mode(BRAND_LIGHT, " (claro)", "light");
+const MODE = VERSION === "claro" ? LIGHT : DARK;
 const LIME = BRAND_DARK.fill;
 const ON_LIME = BRAND_DARK["on-fill"];
 const TITLE_SPACING = EV.titulosMaiusculos ? { charSpacing: CAPS_SPACING } : {};
@@ -565,34 +569,34 @@ function flowSlide(mode, section, title, steps) {
   });
 }
 
-const ESCURO = "Layouts escuros";
-pres.addSection({ title: ESCURO });
+const EXEMPLOS = "Exemplos";
+pres.addSection({ title: EXEMPLOS });
 
-coverSlide(DARK, ESCURO,
+coverSlide(MODE, EXEMPLOS,
   "Título da sua palestra",
   `Modelo de slides da ${EV.nome}`);
 
-let s = slide("Frase", ESCURO);
+let s = slide("Frase" + MODE.suffix, EXEMPLOS);
 fill(s, { title: "A sala está torcendo por você." });
-s.addText("Cada slide deste modelo traz dicas nas anotações.", { x: M, y: 4.0, w: TEXT_W, h: 0.5, fontSize: 20, color: DARK.textHex, fontFace: THEME.bodyFontFace, margin: 0, valign: "top", isTextBox: true, lang: LANG });
+s.addText("Cada slide deste modelo traz dicas nas anotações.", { x: M, y: 4.0, w: TEXT_W, h: 0.5, fontSize: 20, color: MODE.textHex, fontFace: THEME.bodyFontFace, margin: 0, valign: "top", isTextBox: true, lang: LANG });
 
-s = slide("Palestrante", ESCURO);
+s = slide("Palestrante" + MODE.suffix, EXEMPLOS);
 fill(s, {
   title: "Seu nome aqui",
   role: "O que você faz · onde",
   bio: bullets(["Quem abre a sessão costuma apresentar você", "Com o tempo curto, este slide pode sair", "Uma autodescrição ajuda quem não vê"]),
 });
-exampleImage(s, DARK, "photo", "foto", PHOTO);
+exampleImage(s, MODE, "photo", "foto", PHOTO);
 
-s = slide("Citação", ESCURO);
+s = slide("Citação" + MODE.suffix, EXEMPLOS);
 fill(s, {
-  quote: quoted("Legibilidade conta.", LIME),
+  quote: quoted("Legibilidade conta.", MODE.accentHex),
   author: "The Zen of Python, PEP 20",
 });
 // The context line lives on the slide, not the layout: other quotes do not need it.
-s.addText([{ text: "Dicas, " }, marked("não regras"), { text: ": use as que servirem para você." }], { x: M, y: 3.75, w: TEXT_W + 0.5, h: 0.5, fontSize: 20, color: DARK.textHex, fontFace: THEME.bodyFontFace, margin: 0, valign: "top", isTextBox: true, lang: LANG });
+s.addText([{ text: "Dicas, " }, marked("não regras"), { text: ": use as que servirem para você." }], { x: M, y: 3.75, w: TEXT_W + 0.5, h: 0.5, fontSize: 20, color: MODE.textHex, fontFace: THEME.bodyFontFace, margin: 0, valign: "top", isTextBox: true, lang: LANG });
 
-s = slide("Título e conteúdo", ESCURO);
+s = slide("Título e conteúdo" + MODE.suffix, EXEMPLOS);
 fill(s, {
   title: "Na hora de começar",
   body: bullets([
@@ -603,7 +607,7 @@ fill(s, {
   ]),
 });
 
-s = slide("Agenda", ESCURO);
+s = slide("Agenda" + MODE.suffix, EXEMPLOS);
 fill(s, {
   title: "Agenda",
   body: numbered([
@@ -615,10 +619,10 @@ fill(s, {
   ]),
 });
 
-s = slide("Seção", ESCURO);
+s = slide("Seção" + MODE.suffix, EXEMPLOS);
 fill(s, { number: "01", title: "Uma seção para cada parte da agenda" });
 
-s = slide("Duas colunas", ESCURO);
+s = slide("Duas colunas" + MODE.suffix, EXEMPLOS);
 fill(s, {
   title: "Texto no slide",
   leftTitle: "Em vez de",
@@ -627,28 +631,28 @@ fill(s, {
   right: bullets(["Uma ideia por slide", "Falar o que o slide não diz", "Dividir em dois slides", "A “colinha” nas anotações do slide"]),
 });
 
-s = slide("Texto e imagem", ESCURO);
+s = slide("Texto e imagem" + MODE.suffix, EXEMPLOS);
 fill(s, {
   title: "Imagens que explicam",
   body: bullets(["Um diagrama no lugar de um parágrafo", "Uma imagem por ideia", "Descreva para quem não vê"]),
 });
-exampleImage(s, DARK, "image", "imagem-caixa", IMAGE_RIGHT);
+exampleImage(s, MODE, "image", "imagem-caixa", IMAGE_RIGHT);
 
-s = slide("Imagem e texto", ESCURO);
+s = slide("Imagem e texto" + MODE.suffix, EXEMPLOS);
 fill(s, {
   title: "Licença e crédito",
   body: bullets(["Fotos suas ou de licença livre", "A licença permite este uso?", "Crédito da autoria no slide", "Pelo menos 1080 px de altura"]),
 });
-exampleImage(s, DARK, "image", "imagem-lado", IMAGE_LEFT);
+exampleImage(s, MODE, "image", "imagem-lado", IMAGE_LEFT);
 
-s = slide("Três imagens", ESCURO);
+s = slide("Três imagens" + MODE.suffix, EXEMPLOS);
 fill(s, {
   title: "Capturas de tela legíveis",
   caption1: "Só a parte que importa",
   caption2: "Fonte grande antes de capturar",
   caption3: "Sem senhas, tokens nem e-mails",
 });
-[0, 1, 2].forEach((i) => exampleImage(s, DARK, `image${i + 1}`, "captura", shotBox(i)));
+[0, 1, 2].forEach((i) => exampleImage(s, MODE, `image${i + 1}`, "captura", shotBox(i)));
 
 const SAMPLE_CODE = `@dataclass
 class Palestra:
@@ -665,10 +669,10 @@ function codeSlide(layout, section, tip) {
   fill(sl, { title: "Código com cores", code: highlightCode(SAMPLE_CODE, "python"), note: tip });
   return sl;
 }
-s = codeSlide("Código", ESCURO, [
+s = codeSlide("Código" + MODE.suffix, EXEMPLOS, [
   { text: "Dica: ", options: { bold: true } },
   { text: "gere o código colorido no " },
-  link("slidesnippet.com", LINK_ON_DARK),
+  link("slidesnippet.com", MODE.linkHex),
   { text: ", tema GitHub Light." },
 ]);
 decorate("codigo", s);
@@ -697,7 +701,7 @@ class Palestra:
 // The whole class at 6 pt shows what a long snippet looks like from the back of the room.
 const tiny = (runs) => runs.map((r) => ({ ...r, options: { ...r.options, fontSize: 6, lineSpacing: 7.5 } }));
 
-s = slide("Código lado a lado", ESCURO);
+s = slide("Código lado a lado" + MODE.suffix, EXEMPLOS);
 fill(s, {
   title: "Um exemplo menor também ensina",
   leftTitle: "Muito pequeno para ler 😟",
@@ -710,14 +714,14 @@ fill(s, {
 `),
 });
 
-s = slide("Números em destaque", ESCURO);
+s = slide("Números em destaque" + MODE.suffix, EXEMPLOS);
 s.addText("Três números que ajudam", { placeholder: "title" });
 [["18", "pontos de letra: dá para ler do fundo da sala"], ["1", "ensaio em voz alta mostra o tempo real"], ["5", "minutos para perguntas no fim"]].forEach(([v, l], i) => {
   fill(s, { [`value${i + 1}`]: v, [`label${i + 1}`]: l });
 });
 decorate("numeros", s);
 
-s = slide("Três cartões", ESCURO);
+s = slide("Três cartões" + MODE.suffix, EXEMPLOS);
 s.addText("Antes de subir ao palco", { placeholder: "title" });
 [
   ["Live coding", "Plano B: capturas de tela ou um vídeo da demo."],
@@ -725,10 +729,10 @@ s.addText("Antes de subir ao palco", { placeholder: "title" });
   ["PDF", "Leve os slides em PDF num pendrive."],
 ].forEach(([h, t], i) => fill(s, { [`card${i + 1}Title`]: h, [`card${i + 1}`]: t }));
 
-s = slide("Somente título", ESCURO);
+s = slide("Somente título" + MODE.suffix, EXEMPLOS);
 s.addText("O seu dia de palestra", { placeholder: "title" });
 const tableHead = { bold: true, color: ON_LIME, fill: { color: LIME } };
-const tableCell = { color: DARK.textHex, fill: { color: DARK.cardHex } };
+const tableCell = { color: MODE.textHex, fill: { color: MODE.cardHex } };
 const row = (cells, options) => cells.map((text) => ({ text, options }));
 s.addTable(
   [
@@ -742,20 +746,20 @@ s.addTable(
       ["Depois", "Publicar os slides no link do QR code"],
     ].map((cells) => row(cells, tableCell)),
   ],
-  { x: M, y: BODY.y, w: W - 2 * M, colW: [2.2, 6.8], fontSize: 18, fontFace: THEME.bodyFontFace, rowH: 0.48, border: { type: "solid", pt: 1, color: DARK.bg }, margin: 0.08, valign: "middle", lang: LANG }
+  { x: M, y: BODY.y, w: W - 2 * M, colW: [2.2, 6.8], fontSize: 18, fontFace: THEME.bodyFontFace, rowH: 0.48, border: { type: "solid", pt: 1, color: MODE.bg }, margin: 0.08, valign: "middle", lang: LANG }
 );
 
-chartSlide(DARK, ESCURO);
+chartSlide(MODE, EXEMPLOS);
 
-flowSlide(DARK, ESCURO, "Um dia de evento", ["Palestras", "Coffee break", "Lightning talks", "PyRolê"]);
+flowSlide(MODE, EXEMPLOS, "Um dia de evento", ["Palestras", "Coffee break", "Lightning talks", "PyRolê"]);
 
-s = slide("Imagem cheia", ESCURO);
+s = slide("Imagem cheia", EXEMPLOS);
 // The example image fills the placeholder; an empty placeholder would be drawn above the caption.
-exampleImage(s, DARK, "image", "fundo", { x: 0, y: 0, w: W, h: H });
+exampleImage(s, MODE, "image", "fundo", { x: 0, y: 0, w: W, h: H });
 s.addShape(pres.ShapeType.rect, { x: 0, y: H - 0.9, w: W, h: 0.9, fill: { color: DARK.bg, transparency: 25 }, line: { color: DARK.bg, width: 0 }, objectName: "Faixa da legenda" });
 s.addText("Legenda da foto. Foto: Nome da pessoa · CC BY 4.0", { x: M, y: H - 0.75, w: W - 2 * M, h: 0.6, fontSize: 18, color: DARK.textHex, valign: "middle", isTextBox: true, margin: 0, lang: LANG });
 
-s = slide("Destaque", ESCURO);
+s = slide("Destaque" + MODE.suffix, EXEMPLOS);
 fill(s, {
   title: "Sua palestra é para todo mundo",
   body: bullets([
@@ -765,13 +769,13 @@ fill(s, {
   ]),
 });
 
-s = slide("Referências", ESCURO);
+s = slide("Referências" + MODE.suffix, EXEMPLOS);
 s.addText("Referências", { placeholder: "title" });
 // About 70 characters fit on a line at 18 pt; a longer reference puts its address on the next line.
 const REFERENCE_LINE = 70;
 const reference = ([name, url], i, all) => [
   { text: name + "  ", options: { breakLine: name.length + url.length + 2 > REFERENCE_LINE } },
-  link(url, LINK_ON_DARK, { breakLine: i < all.length - 1 }),
+  link(url, MODE.linkHex, { breakLine: i < all.length - 1 }),
 ];
 s.addText([
   [`Código de conduta ${EV.conduta.de}`, EV.conduta.endereco],
@@ -780,20 +784,12 @@ s.addText([
   ["Verificador de contraste", "webaim.org/resources/contrastchecker"],
 ].flatMap(reference), { placeholder: "body" });
 
-closingSlide(DARK, ESCURO, "Perguntas?");
 
-// ----- light variants -----
-const CLARO = "Layouts claros";
-pres.addSection({ title: CLARO });
 
-coverSlide(LIGHT, CLARO,
-  "Título da sua palestra",
-  "Versão clara, para projetor, TV ou monitor");
-
-s = slide("Seção (claro)", CLARO);
+s = slide("Seção" + MODE.suffix, EXEMPLOS);
 fill(s, { number: "02", title: "Uma pausa para respirar e beber água" });
 
-s = slide("Título e conteúdo (claro)", CLARO);
+s = slide("Título e conteúdo" + MODE.suffix, EXEMPLOS);
 fill(s, {
   title: "A sua tela no telão",
   body: bullets([
@@ -804,7 +800,7 @@ fill(s, {
   ]),
 });
 
-s = slide("Duas colunas (claro)", CLARO);
+s = slide("Duas colunas" + MODE.suffix, EXEMPLOS);
 fill(s, {
   title: "Um ensaio em voz alta ajuda",
   leftTitle: "Ensaiar",
@@ -813,34 +809,34 @@ fill(s, {
   right: bullets(["O que passar do tempo", "Detalhes que cabem nas anotações", "Slides que você pula ao ensaiar"]),
 });
 
-s = slide("Texto e imagem (claro)", CLARO);
+s = slide("Texto e imagem" + MODE.suffix, EXEMPLOS);
 fill(s, {
   title: "Imagens acessíveis",
   body: bullets(["Texto alternativo em toda imagem", "Legenda curta se a imagem não for óbvia", "Cor e emoji ajudam, mas não sozinhos"]),
 });
-exampleImage(s, LIGHT, "image", "imagem-caixa", IMAGE_RIGHT);
+exampleImage(s, MODE, "image", "imagem-caixa", IMAGE_RIGHT);
 
-s = slide("Imagem e texto (claro)", CLARO);
+s = slide("Imagem e texto" + MODE.suffix, EXEMPLOS);
 fill(s, {
   title: "Falar com a sala",
   body: bullets(["Olhar para o público, se for confortável", "As anotações do slide como apoio", "Apontar com palavras, não com o mouse"]),
 });
-exampleImage(s, LIGHT, "image", "imagem-lado", IMAGE_LEFT);
+exampleImage(s, MODE, "image", "imagem-lado", IMAGE_LEFT);
 
-codeSlide("Código (claro)", CLARO, [
+codeSlide("Código" + MODE.suffix, EXEMPLOS, [
   { text: "Prefere fundo escuro para o código? ", options: { bold: true } },
   { text: "Use o tema Monokai e deixe a fonte bem grande." },
 ]);
 
-s = slide("Citação (claro)", CLARO);
+s = slide("Citação" + MODE.suffix, EXEMPLOS);
 // Light slides mark the key word with the lime highlight, as the brand's light pages do.
-const [open, , close] = quoted("", LIGHT.accentHex);
+const [open, , close] = quoted("", MODE.accentHex);
 fill(s, { quote: [open, marked("Pessoas"), { text: " > Tecnologia" }, close], author: "Comunidade Python Brasil, 2016" });
 
-s = slide("Frase (claro)", CLARO);
+s = slide("Frase" + MODE.suffix, EXEMPLOS);
 fill(s, { title: "Menos texto, letra maior." });
 
-s = slide("Destaque (claro)", CLARO);
+s = slide("Destaque" + MODE.suffix, EXEMPLOS);
 fill(s, {
   title: "Fale de um jeito que acolha",
   body: bullets([
@@ -850,7 +846,7 @@ fill(s, {
   ]),
 });
 
-s = slide("Três cartões (claro)", CLARO);
+s = slide("Três cartões" + MODE.suffix, EXEMPLOS);
 s.addText("Depois da palestra", { placeholder: "title" });
 [
   ["Anotações", "Anote o que funcionou, para a próxima palestra."],
@@ -858,19 +854,21 @@ s.addText("Depois da palestra", { placeholder: "title" });
   ["Descanso", "Aproveite o resto do evento. Você mereceu."],
 ].forEach(([h, t], i) => fill(s, { [`card${i + 1}Title`]: h, [`card${i + 1}`]: t }));
 
-s = slide("Palestrante (claro)", CLARO);
+s = slide("Palestrante" + MODE.suffix, EXEMPLOS);
 fill(s, {
   title: "Seu nome aqui",
   role: "Pronomes, cargo e comunidade",
   bio: bullets(["Onde o público encontra você", "Três fatos, não um currículo", "Uma foto recente"]),
 });
-exampleImage(s, LIGHT, "photo", "foto", PHOTO);
+exampleImage(s, MODE, "photo", "foto", PHOTO);
 
-flowSlide(LIGHT, CLARO, "Do rascunho ao palco", ["Escrever os slides", "Ensaiar em voz alta", "Exportar em PDF", "Apresentar"]);
+flowSlide(MODE, EXEMPLOS, "Do rascunho ao palco", ["Escrever os slides", "Ensaiar em voz alta", "Exportar em PDF", "Apresentar"]);
 
-chartSlide(LIGHT, CLARO);
+chartSlide(MODE, EXEMPLOS);
 
-closingSlide(LIGHT, CLARO, "Valeu!");
+closingSlide(MODE, EXEMPLOS, "Perguntas?");
+
+closingSlide(MODE, EXEMPLOS, "Valeu!");
 
 if (EVENT.extra && EVENT.extra.slides) EVENT.extra.slides(context(DARK));
 

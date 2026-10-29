@@ -1,23 +1,25 @@
-// Renders dist/<event>/<event>.pptx through LibreOffice: a PDF, one PNG per slide in
-// dist/<event>/preview/, a contact sheet, an animated tour of a few slides, and the .odp
-// copy of the deck with its fonts embedded.
+// Renders dist/<event>/<event>-<version>.pptx through LibreOffice: a PDF, one PNG per slide
+// in dist/<event>/preview/<version>/, a contact sheet, an animated tour of a few slides, and
+// the .odp copy of the deck with its fonts embedded.
 // Needs `soffice` on PATH (LibreOffice), `pdftoppm` (poppler) and ImageMagick 6 or 7.
 //
-//   node core/pptx/render.js python-brasil-2026
+//   node core/pptx/render.js python-brasil-2026 claro
 const { execFileSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
 const ROOT = path.resolve(__dirname, "../..");
 const SLUG = process.argv[2];
-if (!SLUG) throw new Error("usage: node core/pptx/render.js <event folder name>");
+const VERSION = process.argv[3] || "escuro";
+if (!SLUG || !["escuro", "claro"].includes(VERSION)) throw new Error("usage: node core/pptx/render.js <event folder name> [escuro|claro]");
+const NAME = `${SLUG}-${VERSION}`;
 const DIST = path.join(ROOT, "dist", SLUG);
-const BUILD = path.join(ROOT, "build", SLUG);
-const PREVIEW = path.join(DIST, "preview");
-const DECK = path.join(DIST, `${SLUG}.pptx`);
+const BUILD = path.join(ROOT, "build", SLUG, VERSION);
+const PREVIEW = path.join(DIST, "preview", VERSION);
+const DECK = path.join(DIST, `${NAME}.pptx`);
 
-// Slides for the tour, by number: a sample of the dark layouts, the light ones and the event's own slides.
-const TOUR = [1, 2, 3, 6, 9, 12, 14, 17, 18, 20, 22, 23, 38];
+// Slides for the tour, by number: a sample of the layouts and the event's own last slide.
+const TOUR = [1, 2, 3, 6, 9, 12, 14, 17, 18, 20, 24, 29, 37];
 const TOUR_SECONDS = 2.5;
 
 function run(cmd, args) {
@@ -45,8 +47,8 @@ for (const f of fs.readdirSync(PREVIEW)) if (f.endsWith(".png")) fs.unlinkSync(p
 
 run("soffice", ["--headless", "--convert-to", "pdf", "--outdir", BUILD, DECK]);
 run("soffice", ["--headless", "--convert-to", "odp", "--outdir", DIST, DECK]);
-run("python3", [path.join(__dirname, "embed_fonts.py"), path.join(DIST, `${SLUG}.odp`)]);
-const pdf = path.join(BUILD, `${SLUG}.pdf`);
+run("python3", [path.join(__dirname, "embed_fonts.py"), path.join(DIST, `${NAME}.odp`)]);
+const pdf = path.join(BUILD, `${NAME}.pdf`);
 run("pdftoppm", ["-png", "-r", "110", pdf, path.join(PREVIEW, "slide")]);
 
 const slides = fs.readdirSync(PREVIEW).filter((f) => /^slide-.*\.png$/.test(f)).sort().map((f) => path.join(PREVIEW, f));

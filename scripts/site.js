@@ -19,7 +19,7 @@ function dateLine(e) {
 function eventSlugs() {
   return fs
     .readdirSync(path.join(ROOT, "events"))
-    .filter((name) => !name.startsWith("_") && fs.existsSync(path.join(DIST, name, `${name}.pptx`)));
+    .filter((name) => !name.startsWith("_") && fs.existsSync(path.join(DIST, name, `${name}-escuro.pptx`)));
 }
 
 function fontImport(dir) {
@@ -46,12 +46,19 @@ ${body}
 function eventPage(ev) {
   const { event: e, light, fonts, slug } = ev;
   fs.copyFileSync(ev.logo.light.file, path.join(DIST, slug, "logo.png"));
-  const links = [
-    e.googleSlides && [e.googleSlides, "Google Slides", "Faz uma cópia no seu Google Drive."],
-    [`${slug}.pptx`, "PowerPoint (.pptx)", "Abre no PowerPoint, no Keynote e no Google Slides."],
-    [`${slug}.odp`, "LibreOffice (.odp)", "Com as fontes do evento dentro do arquivo."],
-    [`${slug}-marp.zip`, "Marp (.zip)", "Slides em Markdown, para o VS Code com a extensão Marp."],
-  ].filter(Boolean);
+  const list = (links) => `<ul class="arquivos">\n${links.filter(Boolean).map(([href, label, note]) => `<li><a href="${escape(href)}">${escape(label)}</a><span>${escape(note)}</span></li>`).join("\n")}\n</ul>`;
+  // event.json can carry a Google Slides copy link per version: { "escuro": "...", "claro": "..." }.
+  const version = (key, title) => `<section class="versao">
+<a href="preview/${key}/overview.png"><img src="preview/${key}/slide-01.png" alt="Capa da ${escape(title.toLowerCase())} do modelo"></a>
+<h3>${escape(title)}</h3>
+${list([
+  e.googleSlides && e.googleSlides[key] && [e.googleSlides[key], "Google Slides", "Faz uma cópia no seu Google Drive."],
+  [`${slug}-${key}.pptx`, "PowerPoint (.pptx)", "Abre no PowerPoint e no Keynote."],
+  [`${slug}-${key}.odp`, "LibreOffice (.odp)", "Com as fontes do evento dentro do arquivo."],
+  [`${slug}-${key}.pdf`, "PDF", "Para ver os slides sem instalar nada."],
+])}
+<a href="preview/${key}/overview.png">Ver todos os slides</a>
+</section>`;
   const style = `<style>
 :root { --bg: #${light.bg}; --text: #${light.text}; --muted: #${light.muted}; --link: #${light.link}; --card: #${light.card}; --line: #${light["card-outline"]}; }
 * { box-sizing: border-box; }
@@ -67,7 +74,9 @@ ul.arquivos { list-style: none; padding: 0; display: grid; gap: 12px; }
 ul.arquivos li { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; }
 ul.arquivos a { font-weight: 700; font-size: 20px; }
 ul.arquivos span { display: block; color: var(--muted); }
-img.previa { width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--line); }
+h3 { font-family: "${fonts.head}", system-ui, sans-serif; font-size: 22px; margin: 12px 0 8px; }
+.versoes { display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.versao img { width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--line); }
 footer { margin-top: 48px; color: var(--muted); font-size: 16px; }
 </style>`;
   const body = `<main>
@@ -75,15 +84,17 @@ footer { margin-top: 48px; color: var(--muted); font-size: 16px; }
 <h1>Modelo de slides da ${escape(e.nome)}</h1>
 <p class="data">${escape(dateLine(e))}</p>
 <p>Que bom que você vai palestrar! Cada slide do modelo mostra um layout e traz dicas nas anotações. Use as que servirem para você.</p>
-<h2>Baixe o modelo</h2>
-<ul class="arquivos">
-${links.map(([href, label, note]) => `<li><a href="${escape(href)}">${escape(label)}</a><span>${escape(note)}</span></li>`).join("\n")}
-</ul>
-<h2>Escuro ou claro?</h2>
+<h2>Escolha a versão</h2>
 <p>Tela de LED do tamanho de uma parede: a versão escura, que não ofusca o público. Projetor, TV ou monitor: a versão clara. O código fica em fundo claro nas duas.</p>
-<h2>Veja antes de baixar</h2>
-<p><a href="marp/">Os slides no navegador</a> (a tecla D troca entre claro e escuro, a tecla P abre as anotações) e o <a href="slides.pdf">PDF</a>.</p>
-<img class="previa" src="preview/overview.png" alt="Miniaturas de todos os slides do modelo da ${escape(e.nome)}">
+<div class="versoes">
+${version("escuro", "Versão escura")}
+${version("claro", "Versão clara")}
+</div>
+<h2>Em Markdown, com o Marp</h2>
+${list([
+  [`${slug}-marp.zip`, "Marp (.zip)", "As duas versões num pacote para o VS Code com a extensão Marp. A linha theme, no topo de slides.md, escolhe a versão."],
+  ["marp/", "Os slides no navegador", "A tecla D troca entre escuro e claro, e a tecla P abre as anotações."],
+])}
 <footer><a href="../">Outros eventos</a> · <a href="${REPO}">Código do modelo</a></footer>
 </main>`;
   fs.writeFileSync(path.join(DIST, slug, "index.html"), page(`Slides da ${e.nome}`, fontImport(ev.dir) + "\n" + style, body));

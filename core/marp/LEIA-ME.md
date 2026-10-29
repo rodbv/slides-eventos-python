@@ -21,7 +21,9 @@ Este pacote é um modelo para o [Marp](https://marp.app/). A palestra fica em `s
 Na extensão, o comando "Marp: Export Slide Deck" gera PDF, HTML ou PowerPoint. Pela linha de comando:
 
 ```sh
-npx @marp-team/marp-cli@4 --theme-set {{tema}}.css --html --allow-local-files --pdf slides.md
+npx @marp-team/marp-cli@4 --theme-set {{tema}}.css {{tema}}-claro.css --html --allow-local-files --pdf slides.md
 ```
 
-Tela de LED do tamanho de uma parede: versão escura. Projetor, TV ou monitor: versão clara, com `class: light` no topo do arquivo.
+Tela de LED do tamanho de uma parede: versão escura (`theme: {{tema}}`). Projetor, TV ou monitor: versão clara (`theme: {{tema}}-claro`). A linha `theme` fica no topo de `slides.md`.
+
+No dia, vale testar os slides no projetor ou no monitor da sala. No HTML exportado (com a opção --html), a tecla D troca entre a versão escura e a clara: use a que ficar mais legível ali.

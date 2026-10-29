@@ -2,7 +2,7 @@
 //   build/<event>/<event>-marp/   the package a speaker downloads (slides.md, theme, img, scripts)
 //   dist/<event>/<event>-marp.zip that package, zipped
 //   dist/<event>/marp/index.html  the deck as a web page, where the D key switches light and dark
-//   dist/<event>/slides.pdf       the deck as a PDF
+//   dist/<event>/<event>-escuro.pdf and <event>-claro.pdf, the deck as PDFs
 // Needs `uv` (Python scripts for the chart and the QR code) and `zip`.
 //
 //   node core/marp/build.js python-brasil-2026
@@ -67,10 +67,14 @@ function copyTemplate(from, to) {
 }
 
 // The theme is the brand, the logo variables, the common base and the event's own CSS, in that order.
-function theme() {
+// The light theme is the same CSS with every `section.light` rule applied to all slides. Marp gives
+// `:root` variables priority over `section` ones, so the light variable blocks become `:root` blocks.
+function theme(version) {
   const logoVars = (side) => `  --lockup: url("img/logo-${side}.png");\n`;
-  return [
-    `/*\n * @theme ${SLUG}\n * @size 16:9 1280px 720px\n *\n * Tema da ${EV.nome} para o Marp, gerado por slides-eventos-python.\n */\n`,
+  const name = version === "claro" ? `${SLUG}-claro` : SLUG;
+  const label = version === "claro" ? "versão clara" : "versão escura";
+  const css = [
+    `/*\n * @theme ${name}\n * @size 16:9 1280px 720px\n *\n * Tema da ${EV.nome} para o Marp, ${label}, gerado por slides-eventos-python.\n */\n`,
     fs.readFileSync(path.join(EVENT.dir, "brand.css"), "utf8"),
     ":root {\n" +
       `  --dark-bg: #${EVENT.dark.bg};\n  --dark-text: #${EVENT.dark.text};\n  --rule: var(--text);\n` +
@@ -82,25 +86,21 @@ function theme() {
     EV.titulosMaiusculos ? "" : "h2 {\n  text-transform: none;\n  letter-spacing: normal;\n}\n",
     eventFile("extra.css"),
   ].join("\n");
+  if (version !== "claro") return css;
+  // The D key script in slides.md toggles `light` and `dark` together; in the light theme only `dark` has rules.
+  const d = EVENT.dark;
+  const darkVars = `section.dark {\n  --bg: #${d.bg};\n  --text: #${d.text};\n  --muted: #${d.muted};\n  --accent: #${d.accent};\n  --link: #${d.link};\n  --card: #${d.card};\n  --card-outline: #${d["card-outline"]};\n  --fill-edge: #${d["fill-edge"]};\n${logoVars("escuro")}}\n`;
+  return css.replace(/^section\.light \{/gm, ":root {").replace(/section\.light\b/g, "section").replace(/\.light\b/g, "") + "\n" + darkVars;
 }
-
-// Pressing D in the web page switches every slide between light and dark. The package leaves the
-// script out: the VS Code preview would show the tag as text.
-const TOGGLE_SCRIPT = `
-<script>
-document.addEventListener("keydown", (e) => {
-  if (e.key !== "d" || e.ctrlKey || e.metaKey || e.altKey) return;
-  document.querySelectorAll("section").forEach((s) => s.classList.toggle("light"));
-});
-</script>
-`;
 
 fs.rmSync(STAGE, { recursive: true, force: true });
 fs.mkdirSync(path.join(STAGE, "img"), { recursive: true });
 fs.mkdirSync(DIST, { recursive: true });
 
 const css = `${SLUG}.css`;
-fs.writeFileSync(path.join(STAGE, css), theme());
+const lightCss = `${SLUG}-claro.css`;
+fs.writeFileSync(path.join(STAGE, css), theme("escuro"));
+fs.writeFileSync(path.join(STAGE, lightCss), theme("claro"));
 copyTemplate(path.join(__dirname, "slides.md"), path.join(STAGE, "slides.md"));
 copyTemplate(path.join(__dirname, "LEIA-ME.md"), path.join(STAGE, "LEIA-ME.md"));
 for (const script of ["qr.py", "grafico.py"]) copyTemplate(path.join(__dirname, "scripts", script), path.join(STAGE, "scripts", script));
@@ -114,20 +114,21 @@ run("uv", ["run", "--quiet", path.join(STAGE, "scripts", "qr.py")]);
 run("uv", ["run", "--quiet", path.join(STAGE, "scripts", "grafico.py")]);
 
 fs.mkdirSync(path.join(STAGE, ".vscode"), { recursive: true });
-fs.writeFileSync(path.join(STAGE, ".vscode", "settings.json"), JSON.stringify({ "markdown.marp.themes": [`./${css}`], "markdown.marp.enableHtml": true }, null, 2) + "\n");
+fs.writeFileSync(path.join(STAGE, ".vscode", "settings.json"), JSON.stringify({ "markdown.marp.themes": [`./${css}`, `./${lightCss}`], "markdown.marp.enableHtml": true }, null, 2) + "\n");
 fs.writeFileSync(path.join(STAGE, ".vscode", "extensions.json"), JSON.stringify({ recommendations: ["marp-team.marp-vscode"] }, null, 2) + "\n");
 
 const zip = path.join(DIST, `${PACKAGE_NAME}.zip`);
 fs.rmSync(zip, { force: true });
 run("zip", ["-qr", zip, PACKAGE_NAME], path.dirname(STAGE));
 
-// The web page is built from a copy with the D key script, next to the package's images.
-const webDeck = path.join(STAGE, "..", "slides-web.md");
-fs.writeFileSync(webDeck, fs.readFileSync(path.join(STAGE, "slides.md"), "utf8") + TOGGLE_SCRIPT);
-fs.cpSync(path.join(STAGE, "img"), path.join(path.dirname(webDeck), "img"), { recursive: true });
-const marp = (args) => run(MARP, ["--no-stdin", "--theme-set", path.join(STAGE, css), "--html", "--allow-local-files", ...args]);
+const marp = (args) => run(MARP, ["--no-stdin", "--theme-set", path.join(STAGE, css), path.join(STAGE, lightCss), "--html", "--allow-local-files", ...args]);
 fs.mkdirSync(path.join(DIST, "marp"), { recursive: true });
-marp(["-o", path.join(DIST, "marp", "index.html"), webDeck]);
+marp(["-o", path.join(DIST, "marp", "index.html"), path.join(STAGE, "slides.md")]);
 fs.cpSync(path.join(STAGE, "img"), path.join(DIST, "marp", "img"), { recursive: true });
-marp(["--pdf", "-o", path.join(DIST, "slides.pdf"), path.join(STAGE, "slides.md")]);
-console.log(`wrote dist/${SLUG}/marp/index.html, slides.pdf and ${PACKAGE_NAME}.zip`);
+
+// One PDF per version: the light one comes from a copy whose theme line names the light theme.
+const lightDeck = path.join(STAGE, "..", "slides-claro.md");
+fs.writeFileSync(lightDeck, fs.readFileSync(path.join(STAGE, "slides.md"), "utf8").replace(/^theme: .*$/m, `theme: ${SLUG}-claro`));
+marp(["--pdf", "-o", path.join(DIST, `${SLUG}-escuro.pdf`), path.join(STAGE, "slides.md")]);
+marp(["--pdf", "-o", path.join(DIST, `${SLUG}-claro.pdf`), lightDeck]);
+console.log(`wrote dist/${SLUG}/marp/index.html, the two PDFs and ${PACKAGE_NAME}.zip`);

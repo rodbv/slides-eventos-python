@@ -1,5 +1,6 @@
 ---
 marp: true
+# Versão escura: {{tema}}. Versão clara, para projetor, TV ou monitor: {{tema}}-claro.
 theme: {{tema}}
 lang: pt-BR
 paginate: true
@@ -22,7 +23,9 @@ Modelo de slides da {{nome}}
 <!--
 - Que bom que você vai palestrar! O seu jeito de falar vale mais do que qualquer dica deste modelo.
 - Este arquivo é um modelo: cada slide de exemplo mostra um layout e traz dicas nas anotações. Use as que servirem para você.
-- Para começar: guarde uma cópia sem mudanças, escolha a versão escura ou a clara e copie os slides que quiser usar. O comentário _class no topo de cada slide escolhe o layout.
+- Para começar: guarde uma cópia sem mudanças e copie os slides que quiser usar. O comentário _class no topo de cada slide escolhe o layout.
+- A linha theme, no topo do arquivo, escolhe a versão: {{tema}} é a escura, {{tema}}-claro é a clara. Tela de LED do tamanho de uma parede: versão escura, que não ofusca o público. Projetor, TV ou monitor: versão clara.
+- No dia, vale testar os slides no projetor ou no monitor da sala. No HTML exportado, a tecla D troca entre a versão escura e a clara: use a que ficar mais legível ali.
 - Ao reaproveitar um slide, apague estas anotações e escreva as suas.
 -->
 
@@ -379,47 +382,7 @@ Legenda da foto. Foto: Nome da pessoa · CC BY 4.0
 
 ---
 
-<!-- _class: encerramento -->
-<!-- _paginate: false -->
-<!-- _footer: "" -->
-
-# Perguntas?
-
-**Seu nome aqui**
-_@seu_usuario_
-_voce@exemplo.com.br_
-
-![QR code para {{siteCurto}}](img/qr.png)
-
-Troque pelo seu QR code: contato, slides ou site
-
-<!--
-- O QR code pode levar ao seu contato, aos seus slides ou a uma página com tudo isso. Com uma página só, você troca os links depois sem mudar o QR code.
-- Para gerar o seu QR code: uv run scripts/qr.py https://seu-endereco. O script troca o arquivo img/qr.png. Depois, troque a legenda pelo link.
-- Os próximos slides repetem os layouts na versão clara, com mais dicas.
--->
-
----
-
-<!-- _class: capa light -->
-<!-- _paginate: false -->
-<!-- _footer: "" -->
-
-<div class="selo">{{selo}}</div>
-
-# Título da sua palestra
-
-Versão clara, para projetor, TV ou monitor
-
-**Seu nome aqui** · @seu_usuario
-
-<!--
-- Tela de LED do tamanho de uma parede: use a versão escura, que não ofusca o público. Projetor, TV ou monitor: use a versão clara. O código fica em fundo claro nas duas.
--->
-
----
-
-<!-- _class: secao light -->
+<!-- _class: secao -->
 <!-- _paginate: false -->
 <!-- _footer: "" -->
 
@@ -431,8 +394,6 @@ Versão clara, para projetor, TV ou monitor
 -->
 
 ---
-
-<!-- _class: light -->
 
 ## A sua tela no telão
 
@@ -448,7 +409,7 @@ Versão clara, para projetor, TV ou monitor
 
 ---
 
-<!-- _class: duas-colunas light -->
+<!-- _class: duas-colunas -->
 
 ## Um ensaio em voz alta ajuda
 
@@ -470,8 +431,6 @@ Versão clara, para projetor, TV ou monitor
 
 ---
 
-<!-- _class: light -->
-
 ## Imagens acessíveis
 
 ![bg right:42%](img/imagem-exemplo.png)
@@ -488,8 +447,6 @@ Versão clara, para projetor, TV ou monitor
 
 ---
 
-<!-- _class: light -->
-
 ## Falar com a sala
 
 ![bg left:42%](img/imagem-exemplo.png)
@@ -504,8 +461,6 @@ Versão clara, para projetor, TV ou monitor
 -->
 
 ---
-
-<!-- _class: light -->
 
 ## Código com cores
 
@@ -523,12 +478,10 @@ class Palestra:
 **Prefere fundo escuro para o código?** Use o tema Monokai e deixe a fonte bem grande.
 
 <!--
-- Para código em fundo escuro, veja as anotações do slide “Código com cores”, na parte escura.
+- Para código em fundo escuro, veja as anotações do primeiro slide “Código com cores”.
 -->
 
 ---
-
-<!-- _class: light -->
 
 > <mark>Pessoas</mark> &gt; Tecnologia
 
@@ -541,7 +494,7 @@ Comunidade Python Brasil, 2016
 
 ---
 
-<!-- _class: frase light -->
+<!-- _class: frase -->
 
 # Menos texto, letra maior.
 
@@ -551,7 +504,7 @@ Comunidade Python Brasil, 2016
 
 ---
 
-<!-- _class: destaque light -->
+<!-- _class: destaque -->
 
 ## Fale de um jeito que acolha
 
@@ -567,7 +520,7 @@ Comunidade Python Brasil, 2016
 
 ---
 
-<!-- _class: cartoes light -->
+<!-- _class: cartoes -->
 
 ## Depois da palestra
 
@@ -582,7 +535,7 @@ Comunidade Python Brasil, 2016
 
 ---
 
-<!-- _class: palestrante light -->
+<!-- _class: palestrante -->
 
 ![Foto de exemplo](img/foto-exemplo.png)
 
@@ -600,7 +553,7 @@ Comunidade Python Brasil, 2016
 
 ---
 
-<!-- _class: fluxo light -->
+<!-- _class: fluxo -->
 
 ## Do rascunho ao palco
 
@@ -616,22 +569,41 @@ Comunidade Python Brasil, 2016
 
 ---
 
-<!-- _class: light -->
-
 ## Versão do Python que você usa (%)
 
-![Gráfico de barras com dados de exemplo: Python 3.10 8%, 3.11 15%, 3.12 29%, 3.13 33% e 3.14 15%](img/grafico-exemplo-claro.png)
+![Gráfico de barras com dados de exemplo: Python 3.10 8%, 3.11 15%, 3.12 29%, 3.13 33% e 3.14 15%](img/grafico-exemplo.png)
 
 Dados de exemplo. Para trocar os dados, veja as anotações deste slide.
 
 <!--
-- Para trocar os dados, veja as anotações do slide “Versão do Python que você usa”, na parte escura.
+- Para trocar os dados, veja as anotações do primeiro slide “Versão do Python que você usa”.
 - Escreva os números do gráfico no texto alternativo, para leitores de tela.
 -->
 
 ---
 
-<!-- _class: encerramento light -->
+<!-- _class: encerramento -->
+<!-- _paginate: false -->
+<!-- _footer: "" -->
+
+# Perguntas?
+
+**Seu nome aqui**
+_@seu_usuario_
+_voce@exemplo.com.br_
+
+![QR code para {{siteCurto}}](img/qr.png)
+
+Troque pelo seu QR code: contato, slides ou site
+
+<!--
+- O QR code pode levar ao seu contato, aos seus slides ou a uma página com tudo isso. Com uma página só, você troca os links depois sem mudar o QR code.
+- Para gerar o seu QR code: uv run scripts/qr.py https://seu-endereco. O script troca o arquivo img/qr.png. Depois, troque a legenda pelo link.
+-->
+
+---
+
+<!-- _class: encerramento -->
 <!-- _paginate: false -->
 <!-- _footer: "" -->
 
@@ -652,3 +624,14 @@ Troque pelo seu QR code: contato, slides ou site
 -->
 
 {{extra:fim}}
+
+<script>
+// A tecla D troca entre a versão escura e a clara no HTML exportado pelo Marp.
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "d" || e.ctrlKey || e.metaKey || e.altKey) return;
+  document.querySelectorAll("section").forEach((s) => {
+    s.classList.toggle("light");
+    s.classList.toggle("dark");
+  });
+});
+</script>

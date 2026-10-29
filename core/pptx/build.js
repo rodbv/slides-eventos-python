@@ -12,7 +12,7 @@ const { continueNumbering } = require("./lib/numbering");
 const { fixNotes } = require("./lib/notes");
 const { plainCategories } = require("./lib/charts");
 const { highlightCode, CODE_TEXT_COLOR } = require("./lib/highlight");
-const { loadEvent } = require("./event");
+const { loadEvent } = require("../event");
 
 const ROOT = path.resolve(__dirname, "../..");
 const SLUG = process.argv[2];

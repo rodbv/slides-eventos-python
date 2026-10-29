@@ -1,0 +1,46 @@
+/* ---------- figurinhas ----------
+ * ## Figurinhas
+ * ![w:240](img/sticker.png) ![w:200](img/outra.png)
+ */
+section.figurinhas > p:has(img) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 28px 40px;
+  margin-bottom: 28px;
+}
+
+/* Uma saudação de Floripa para quem chega ao fim do modelo, na linha do título. */
+section.figurinhas > h3 {
+  position: absolute;
+  top: 56px;
+  right: 64px;
+  margin: 0;
+  font-size: 30px;
+  line-height: 46px;
+}
+
+section.figurinhas > p:last-of-type {
+  font-family: var(--font-head);
+  font-size: 22px;
+}
+
+/* O círculo pixelado é uma figurinha atrás de uma palavra: <span class="circulo">olha aqui</span> */
+.circulo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5em 0.9em;
+  background: url("img/pixel-circle.png") center / 100% 100% no-repeat;
+  font-family: var(--font-head);
+  font-weight: 700;
+}
+
+/* A bruxinha translúcida no canto das seções e das frases. */
+:root {
+  --marca-dagua: url("img/marca-dagua-escuro.png");
+}
+
+section.light {
+  --marca-dagua: url("img/marca-dagua-claro.png");
+}

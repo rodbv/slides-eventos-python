@@ -1,0 +1,661 @@
+/*
+ * Base do tema Marp, comum a todos os eventos. As cores, as fontes e os logos vêm das
+ * variáveis de events/<evento>/brand.css; o build junta a marca, esta base e o extra.css
+ * do evento num tema só. Os slides são escuros; a classe `light` dá a versão clara. Cada
+ * layout é uma classe, escolhida com <!-- _class: nome --> no topo do slide.
+ */
+
+section {
+  width: 1280px;
+  height: 720px;
+  box-sizing: border-box;
+  padding: 56px 64px 80px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 36px;
+  line-height: 1.35;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* ---------- texto ---------- */
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-head);
+  font-weight: 700;
+  margin: 0 0 0.6em;
+  line-height: 1.15;
+}
+
+h1 {
+  font-size: 56px;
+  color: var(--accent);
+}
+/* Títulos de conteúdo com um fio embaixo. Com "titulosMaiusculos": false no event.json, o build tira a caixa alta. */
+/* Títulos de conteúdo: caixa alta, mono, com um fio embaixo, como nas páginas da marca. */
+h2 {
+  font-size: 46px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 -64px 0.7em;
+  padding: 0 64px 0.4em;
+  border-bottom: 1px solid var(--rule);
+}
+
+h3 {
+  font-size: 36px;
+  color: var(--accent);
+  margin-bottom: 0.4em;
+}
+
+p {
+  margin: 0 0 0.6em;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding-left: 1.2em;
+}
+
+li + li {
+  margin-top: 0.35em;
+}
+
+ol li::marker {
+  font-family: var(--font-head);
+  font-weight: 700;
+  color: var(--accent);
+}
+
+strong {
+  font-weight: 700;
+}
+
+a {
+  color: var(--link);
+  text-decoration: underline;
+  font-family: var(--font-head);
+}
+
+/* O marca-texto da marca: texto na cor --on-fill, em negrito, sobre a cor de destaque, legível nos dois fundos. */
+mark {
+  background: var(--fill);
+  color: var(--on-fill);
+  font-weight: 700;
+  padding: 0 0.1em;
+}
+
+/* Citação: as aspas na cor de destaque vêm do tema e ficam junto do texto. */
+blockquote {
+  margin: 0;
+  font-size: 54px;
+  line-height: 1.25;
+}
+
+blockquote > p:first-child::before {
+  content: "“";
+  color: var(--accent);
+  font-weight: 700;
+}
+
+blockquote > p:last-child::after {
+  content: "”";
+  color: var(--accent);
+  font-weight: 700;
+}
+
+blockquote + p {
+  font-family: var(--font-head);
+  color: var(--muted);
+  font-size: 30px;
+}
+
+/* ---------- código ---------- */
+
+/* O cartão de código é claro nos dois modos: texto escuro sobre fundo claro se lê melhor,
+ * em especial em letra pequena. As cores são as do tema GitHub Light, todas com contraste AA. */
+pre {
+  background: #ffffff;
+  border: 1px solid #d0d7de;
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin: 0 0 0.5em;
+  font-size: 26px;
+  line-height: 1.3;
+}
+
+code {
+  font-family: var(--font-code);
+}
+
+:not(pre) > code {
+  background: #eef0f2;
+  color: #24292e;
+  border-radius: 6px;
+  padding: 0.05em 0.3em;
+  font-size: 0.9em;
+}
+
+pre code {
+  color: #24292e;
+}
+
+.hljs-keyword,
+.hljs-operator { color: #d73a49; }
+.hljs-built_in,
+.hljs-type,
+.hljs-literal,
+.hljs-number { color: #005cc5; }
+.hljs-title,
+.hljs-title.function_,
+.hljs-title.class_,
+.hljs-meta { color: #6f42c1; }
+.hljs-string { color: #032f62; }
+.hljs-comment { color: #6a737d; }
+
+/* ---------- tabela ---------- */
+
+table {
+  border-collapse: collapse;
+  font-size: 30px;
+}
+
+th {
+  background: var(--fill);
+  color: var(--on-fill);
+  text-align: left;
+}
+
+th,
+td {
+  padding: 8px 16px;
+  border: 2px solid var(--bg);
+}
+
+td {
+  background: var(--card);
+}
+
+img {
+  background: transparent;
+}
+
+/* Uma imagem sozinha num parágrafo, como um gráfico, cabe entre o título e o rodapé. */
+section > p > img:only-child {
+  max-height: 330px;
+  max-width: 100%;
+}
+
+/* ---------- rodapé e número ---------- */
+
+footer,
+section::after {
+  position: absolute;
+  bottom: 28px;
+  font-family: var(--font-head);
+  font-size: 18px;
+  color: var(--muted);
+}
+
+footer {
+  left: 64px;
+}
+
+/* O Marp dá ao número do slide o padding do slide; aqui ele fica na linha do rodapé. */
+section::after {
+  content: attr(data-marpit-pagination);
+  right: 64px;
+  padding: 0;
+}
+
+/* A seção abre uma parte da palestra: leva o logo no canto. */
+section.secao::before {
+  content: "";
+  position: absolute;
+  left: 64px;
+  bottom: 28px;
+  width: 140px;
+  height: 70px;
+  background: var(--lockup) left bottom / contain no-repeat;
+}
+
+/* ---------- capa ---------- */
+
+section.capa {
+  justify-content: center;
+}
+
+section.capa h1 {
+  font-size: 60px;
+  max-width: 60%;
+}
+
+section.capa p {
+  max-width: 60%;
+}
+
+section.capa::before {
+  content: "";
+  position: absolute;
+  right: 64px;
+  top: 300px;
+  width: 440px;
+  height: 218px;
+  background: var(--lockup) center / contain no-repeat;
+}
+
+/* O selo da data na capa: disco na cor de destaque com o texto --on-fill. */
+section.capa .selo {
+  position: absolute;
+  right: 64px;
+  top: 40px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: var(--fill);
+  color: var(--on-fill);
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.25;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* ---------- seção e frase ---------- */
+
+section.secao,
+section.frase {
+  justify-content: center;
+  background: var(--marca-dagua) right -40px bottom -40px / auto 75% no-repeat, var(--bg);
+}
+
+section.secao h1 {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  color: var(--text);
+  font-size: 56px;
+}
+
+/* O número da seção vai entre sublinhados: # _01_ Título */
+section.secao h1 em {
+  flex: 0 0 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: var(--fill);
+  color: var(--on-fill);
+  font-style: normal;
+  font-size: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+section.frase h1 {
+  font-size: 80px;
+  max-width: 82%;
+}
+
+/* ---------- destaque ---------- */
+
+section.destaque {
+  padding-left: calc(470px + 56px);
+  justify-content: center;
+}
+
+section.destaque::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 470px;
+  background: var(--fill);
+}
+
+section.destaque h2 {
+  position: absolute;
+  left: 64px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 340px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: var(--on-fill);
+  font-size: 44px;
+}
+
+section.destaque footer {
+  left: calc(470px + 56px);
+}
+
+/* ---------- duas colunas ----------
+ * ## Título
+ * ### Coluna da esquerda
+ * (lista, código ou texto)
+ * ### Coluna da direita
+ * (lista, código ou texto)
+ */
+section.duas-colunas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto 1fr;
+  column-gap: 56px;
+  align-content: start;
+}
+
+section.duas-colunas > h2 {
+  grid-column: 1 / -1;
+}
+
+section.duas-colunas > h3:first-of-type,
+section.duas-colunas > h3:first-of-type + * {
+  grid-column: 1;
+}
+
+section.duas-colunas > h3:last-of-type,
+section.duas-colunas > h3:last-of-type + * {
+  grid-column: 2;
+}
+
+section.duas-colunas > h3 {
+  grid-row: 2;
+}
+
+section.duas-colunas > h3 + * {
+  grid-row: 3;
+  align-self: start;
+}
+
+section.duas-colunas pre {
+  font-size: 24px;
+}
+
+/* Na classe `miuda`, o código da esquerda fica pequeno de propósito: mostra como a letra miúda chega ao fundo da sala. */
+section.duas-colunas.miuda > h3:first-of-type + pre {
+  font-size: 11px;
+}
+
+/* ---------- números em destaque ----------
+ * ## Título
+ * - **18** pontos: fonte mínima
+ * - **8** linhas de código
+ * - **5** minutos para perguntas
+ */
+section.numeros ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 48px;
+  text-align: center;
+  font-size: 32px;
+}
+
+section.numeros li + li {
+  margin: 0;
+}
+
+section.numeros li strong {
+  display: block;
+  font-family: var(--font-head);
+  font-size: 110px;
+  line-height: 1.1;
+  color: var(--accent);
+}
+
+/* No claro, o número leva o marca-texto: a cor de destaque como texto pode sumir no fundo claro. */
+section.numeros.light li strong {
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+  background: var(--fill);
+  padding: 0 0.12em;
+  margin-bottom: 0.15em;
+}
+
+/* ---------- três cartões ----------
+ * ## Título
+ * 1. **Título do cartão** Descrição curta.
+ */
+section.cartoes ol {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  counter-reset: cartao;
+  font-size: 32px;
+}
+
+section.cartoes li {
+  counter-increment: cartao;
+  margin: 0;
+  min-height: 380px;
+  padding: 28px;
+  box-sizing: border-box;
+  background: var(--card);
+  border: 1px solid var(--card-outline);
+  border-radius: 14px;
+}
+
+section.cartoes li::before {
+  content: counter(cartao, decimal-leading-zero);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--fill);
+  color: var(--on-fill);
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 26px;
+  margin-bottom: 24px;
+}
+
+section.cartoes li strong {
+  display: block;
+  font-family: var(--font-head);
+  color: var(--accent);
+  margin-bottom: 0.5em;
+}
+
+/* ---------- fluxo ----------
+ * ## Título
+ * 1. Primeiro passo
+ * 2. Segundo passo
+ * 3. Terceiro passo
+ */
+section.fluxo ol {
+  list-style: none;
+  padding: 0;
+  margin: auto 0;
+  display: flex;
+  align-items: stretch;
+  gap: 76px;
+  font-size: 32px;
+}
+
+section.fluxo li {
+  position: relative;
+  flex: 1;
+  margin: 0;
+  padding: 28px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: var(--card);
+  border: 2px solid var(--card-outline);
+  border-radius: 14px;
+}
+
+/* A seta fica no vão entre as caixas. */
+section.fluxo li + li::before {
+  content: "→";
+  position: absolute;
+  left: -64px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 52px;
+  color: var(--accent);
+}
+
+/* O último passo leva a cor de destaque, como resultado do fluxo. */
+section.fluxo li:last-child {
+  background: var(--fill);
+  border-color: var(--fill);
+  color: var(--on-fill);
+  font-weight: 700;
+}
+
+/* ---------- três imagens ----------
+ * ## Título
+ * - ![Texto alternativo](img/a.png) Legenda curta
+ */
+section.tres-imagens ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  font-size: 30px;
+}
+
+section.tres-imagens li {
+  margin: 0;
+}
+
+section.tres-imagens li img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  margin-bottom: 14px;
+}
+
+/* ---------- palestrante ----------
+ * ![Foto de ...](img/foto.png)
+ * # Nome
+ * ### Cargo, empresa ou comunidade
+ * - Fato
+ */
+section.palestrante {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  grid-template-rows: auto auto auto;
+  column-gap: 56px;
+  align-content: center;
+  font-size: 32px;
+}
+
+section.palestrante > p:has(img) {
+  grid-column: 1;
+  grid-row: 1 / span 3;
+  margin: 0;
+}
+
+section.palestrante > p:has(img) img {
+  width: 380px;
+  height: 380px;
+  max-height: none;
+  object-fit: cover;
+}
+
+section.palestrante > h1 {
+  font-size: 52px;
+  color: var(--text);
+  margin-bottom: 0.2em;
+}
+
+section.palestrante > h3 {
+  font-size: 28px;
+}
+
+section.palestrante > :not(p:has(img), footer) {
+  grid-column: 2;
+}
+
+/* ---------- imagem cheia ----------
+ * ![bg](img/foto.jpg)
+ * Legenda com o crédito da foto
+ */
+section.imagem-cheia > p:last-of-type {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 26px 64px;
+  background: color-mix(in srgb, var(--dark-bg) 75%, transparent);
+  color: var(--dark-text);
+  font-size: 26px;
+}
+
+/* ---------- encerramento ----------
+ * # Perguntas?
+ * Contatos
+ * ![QR code para ...](img/qr.png)
+ * endereço.com.br/slides
+ */
+section.encerramento {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  column-gap: 56px;
+  align-content: center;
+}
+
+section.encerramento > :not(footer) {
+  grid-column: 1;
+}
+
+section.encerramento > h1 {
+  font-size: 72px;
+}
+
+section.encerramento > p:has(img) {
+  grid-column: 2;
+  grid-row: 1 / span 4;
+  margin: 0;
+  text-align: center;
+}
+
+section.encerramento > p:has(img) img {
+  width: 400px;
+  height: 400px;
+  max-height: none;
+}
+
+/* Contatos em mono: _@usuario_ */
+section.encerramento em {
+  font-style: normal;
+  font-family: var(--font-head);
+  font-size: 0.8em;
+  color: var(--muted);
+}
+
+section.encerramento > p:has(img) + p {
+  grid-column: 2;
+  grid-row: 5;
+  text-align: center;
+  font-family: var(--font-head);
+  font-size: 26px;
+}
+
+section.encerramento > h3 {
+  font-size: 26px;
+}

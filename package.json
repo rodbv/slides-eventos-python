@@ -15,5 +15,8 @@
     "sharp": "^0.35.5",
     "shiki": "^4.5.0"
   },
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "@marp-team/marp-cli": "^4.5.1"
+  }
 }

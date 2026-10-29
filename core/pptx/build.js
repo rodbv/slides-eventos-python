@@ -732,7 +732,7 @@ s.addTable(
 
 chartSlide(DARK, ESCURO);
 
-flowSlide(DARK, ESCURO, "Um dia de evento", ["Palestras", "Coffee break", "Lightning talks", "PyBar"]);
+flowSlide(DARK, ESCURO, "Um dia de evento", ["Palestras", "Coffee break", "Lightning talks", "PyRolê"]);
 
 s = slide("Imagem cheia", ESCURO);
 // The example image fills the placeholder; an empty placeholder would be drawn above the caption.

@@ -420,6 +420,7 @@ section.numeros.light li strong {
   margin-left: auto;
   margin-right: auto;
   background: var(--fill);
+  color: var(--on-fill);
   padding: 0 0.12em;
   margin-bottom: 0.15em;
 }

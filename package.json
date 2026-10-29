@@ -3,9 +3,7 @@
   "version": "0.1.0",
   "description": "Modelos de slides para eventos da comunidade Python: gerador .pptx/.odp e tema Marp",
   "scripts": {
-    "build": "node core/pptx/build.js",
-    "render": "node core/pptx/render.js",
-    "all": "npm run build && npm run render"
+    "build": "node scripts/build.js"
   },
   "license": "CC0-1.0",
   "type": "commonjs",

@@ -9,5 +9,9 @@
   "titulosMaiusculos": false,
   "corDestaque": "ocre",
   "conduta": { "de": "da Python Cerrado", "endereco": "pythoncerrado.org/2026/sobre/codigo-de-conduta" },
+  "googleSlides": {
+    "claro": "https://docs.google.com/presentation/d/1CwIsZVshYZQcmvY3dEWjABGNSApM9yWbZ9l4E-K0xmU/copy",
+    "escuro": "https://docs.google.com/presentation/d/1c_yHoUi1NuDl18J1elToXNz-l1saSnd74kfvsgUEP5I/copy"
+  },
   "logo": { "escuro": "assets/logo-escuro.png", "claro": "assets/logo-claro.png", "alt": "Python Cerrado" }
 }

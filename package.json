@@ -1,0 +1,19 @@
+{
+  "name": "slides-eventos-python",
+  "version": "0.1.0",
+  "description": "Modelos de slides para eventos da comunidade Python: gerador .pptx/.odp e tema Marp",
+  "scripts": {
+    "build": "node core/pptx/build.js",
+    "render": "node core/pptx/render.js",
+    "all": "npm run build && npm run render"
+  },
+  "license": "CC0-1.0",
+  "type": "commonjs",
+  "dependencies": {
+    "pptxgenjs": "^4.0.1",
+    "qrcode": "^1.5.4",
+    "sharp": "^0.35.5",
+    "shiki": "^4.5.0"
+  },
+  "private": true
+}

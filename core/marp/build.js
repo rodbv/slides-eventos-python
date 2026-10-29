@@ -84,6 +84,8 @@ function theme(version) {
       "}\n",
     fs.readFileSync(path.join(__dirname, "base.css"), "utf8"),
     EV.titulosMaiusculos ? "" : "h2 {\n  text-transform: none;\n  letter-spacing: normal;\n}\n",
+    // The footer text stays in the page for screen readers; the logo takes its place on screen.
+    EV.rodapeLogo ? "footer {\n  bottom: 22px;\n  width: 96px;\n  height: 34px;\n  font-size: 0;\n  background: var(--lockup) left center / contain no-repeat;\n}\n" : "",
     eventFile("extra.css"),
   ].join("\n");
   if (version !== "claro") return css;

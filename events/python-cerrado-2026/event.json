@@ -4,6 +4,7 @@
   "selo": "6 e 7\nde novembro\nde 2026\n{Brasília/DF}",
   "site": "https://pythoncerrado.org/2026",
   "rodape": "Python Cerrado 2026",
+  "rodapeLogo": true,
   "organizacao": "Python Cerrado",
   "titulosMaiusculos": false,
   "corDestaque": "ocre",

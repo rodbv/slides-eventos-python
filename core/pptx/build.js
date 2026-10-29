@@ -136,9 +136,14 @@ const TITLE_SPACING = EV.titulosMaiusculos ? { charSpacing: CAPS_SPACING } : {};
 
 const LOCKUP_RATIO = EVENT.logo.dark.ratio;
 
-// Content slides carry the event name as quiet text; the logo itself appears only on the
-// cover, section and closing slides, where it does not compete with the content.
+// Content slides carry the event name as quiet text, or as a small logo when event.json sets
+// rodapeLogo; the large logo appears only on the cover, section and closing slides.
+const FOOTER_LOGO_W = 0.75;
 function footer(mode, x = M) {
+  if (EV.rodapeLogo) {
+    const h = FOOTER_LOGO_W * LOCKUP_RATIO;
+    return [{ image: { x, y: FOOTER_Y + 0.08 - h / 2, w: FOOTER_LOGO_W, h, path: mode.lockupSmall, altText: EVENT.logo.alt } }];
+  }
   return [{ text: { text: EV.rodape, options: { x, y: FOOTER_Y - 0.07, w: 3, h: 0.3, fontSize: 12, color: mode.mutedHex, fontFace: THEME.headFontFace, margin: 0, valign: "middle", lang: LANG } } }];
 }
 

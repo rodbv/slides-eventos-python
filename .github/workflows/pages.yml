@@ -1,10 +1,12 @@
 # Builds every event and publishes the site on GitHub Pages at every push to main:
 # dist/index.html lists the events, and dist/<event>/ holds that event's downloads.
+# A pull request gets the same build, and its github-pages artifact holds the site for review.
 name: pages
 
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -13,7 +15,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -54,6 +56,7 @@ jobs:
           path: dist
 
   deploy:
+    if: github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-24.04
     environment:

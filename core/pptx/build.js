@@ -583,7 +583,7 @@ s.addText("Cada slide deste modelo traz dicas nas anotações.", { x: M, y: 4.0,
 s = slide("Palestrante" + MODE.suffix, EXEMPLOS);
 fill(s, {
   title: "Seu nome aqui",
-  role: "O que você faz · onde",
+  role: "Pronomes, cargo e comunidade",
   bio: bullets(["Quem abre a sessão costuma apresentar você", "Com o tempo curto, este slide pode sair", "Uma autodescrição ajuda quem não vê"]),
 });
 exampleImage(s, MODE, "photo", "foto", PHOTO);
@@ -783,90 +783,6 @@ s.addText([
   [`Fontes ${[...new Set([THEME.bodyFontFace, THEME.headFontFace, THEME.codeFontFace])].join(" e ")}`, "fonts.google.com"],
   ["Verificador de contraste", "webaim.org/resources/contrastchecker"],
 ].flatMap(reference), { placeholder: "body" });
-
-
-
-s = slide("Seção" + MODE.suffix, EXEMPLOS);
-fill(s, { number: "02", title: "Uma pausa para respirar e beber água" });
-
-s = slide("Título e conteúdo" + MODE.suffix, EXEMPLOS);
-fill(s, {
-  title: "A sua tela no telão",
-  body: bullets([
-    "Notificações desligadas (modo Não incomodar)",
-    "Papel de parede neutro",
-    "Só as abas e os programas da palestra",
-    "Janela anônima: o histórico não aparece ao digitar endereços",
-  ]),
-});
-
-s = slide("Duas colunas" + MODE.suffix, EXEMPLOS);
-fill(s, {
-  title: "Um ensaio em voz alta ajuda",
-  leftTitle: "Ensaiar",
-  left: bullets(["Com cronômetro", "Com alguém assistindo", "No computador da palestra"]),
-  rightTitle: "Cortar",
-  right: bullets(["O que passar do tempo", "Detalhes que cabem nas anotações", "Slides que você pula ao ensaiar"]),
-});
-
-s = slide("Texto e imagem" + MODE.suffix, EXEMPLOS);
-fill(s, {
-  title: "Imagens acessíveis",
-  body: bullets(["Texto alternativo em toda imagem", "Legenda curta se a imagem não for óbvia", "Cor e emoji ajudam, mas não sozinhos"]),
-});
-exampleImage(s, MODE, "image", "imagem-caixa", IMAGE_RIGHT);
-
-s = slide("Imagem e texto" + MODE.suffix, EXEMPLOS);
-fill(s, {
-  title: "Falar com a sala",
-  body: bullets(["Olhar para o público, se for confortável", "As anotações do slide como apoio", "Apontar com palavras, não com o mouse"]),
-});
-exampleImage(s, MODE, "image", "imagem-lado", IMAGE_LEFT);
-
-codeSlide("Código" + MODE.suffix, EXEMPLOS, [
-  { text: "Prefere fundo escuro para o código? ", options: { bold: true } },
-  { text: "Use o tema Monokai e deixe a fonte bem grande." },
-]);
-
-s = slide("Citação" + MODE.suffix, EXEMPLOS);
-// Light slides mark the key word with the lime highlight, as the brand's light pages do.
-const [open, , close] = quoted("", MODE.accentHex);
-fill(s, { quote: [open, marked("Pessoas"), { text: " > Tecnologia" }, close], author: "Comunidade Python Brasil, 2016" });
-
-s = slide("Frase" + MODE.suffix, EXEMPLOS);
-fill(s, { title: "Menos texto, letra maior." });
-
-s = slide("Destaque" + MODE.suffix, EXEMPLOS);
-fill(s, {
-  title: "Fale de um jeito que acolha",
-  body: bullets([
-    "Mostre o passo a passo em vez de dizer que é fácil",
-    "Explique cada sigla na primeira vez",
-    "Pergunte quem já usou em vez de supor",
-  ]),
-});
-
-s = slide("Três cartões" + MODE.suffix, EXEMPLOS);
-s.addText("Depois da palestra", { placeholder: "title" });
-[
-  ["Anotações", "Anote o que funcionou, para a próxima palestra."],
-  ["Conversa", "Fique por perto: muitas perguntas aparecem no corredor."],
-  ["Descanso", "Aproveite o resto do evento. Você mereceu."],
-].forEach(([h, t], i) => fill(s, { [`card${i + 1}Title`]: h, [`card${i + 1}`]: t }));
-
-s = slide("Palestrante" + MODE.suffix, EXEMPLOS);
-fill(s, {
-  title: "Seu nome aqui",
-  role: "Pronomes, cargo e comunidade",
-  bio: bullets(["Onde o público encontra você", "Três fatos, não um currículo", "Uma foto recente"]),
-});
-exampleImage(s, MODE, "photo", "foto", PHOTO);
-
-flowSlide(MODE, EXEMPLOS, "Do rascunho ao palco", ["Escrever os slides", "Ensaiar em voz alta", "Exportar em PDF", "Apresentar"]);
-
-chartSlide(MODE, EXEMPLOS);
-
-closingSlide(MODE, EXEMPLOS, "Perguntas?");
 
 closingSlide(MODE, EXEMPLOS, "Valeu!");
 

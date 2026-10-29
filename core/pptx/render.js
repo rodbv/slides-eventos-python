@@ -18,8 +18,8 @@ const BUILD = path.join(ROOT, "build", SLUG, VERSION);
 const PREVIEW = path.join(DIST, "preview", VERSION);
 const DECK = path.join(DIST, `${NAME}.pptx`);
 
-// Slides for the tour, by number: a sample of the layouts and the event's own last slide.
-const TOUR = [1, 2, 3, 6, 9, 12, 14, 17, 18, 20, 24, 29, 37];
+// Slides for the tour, by number: a sample of the layouts and the last slide (-1), which can be the event's own.
+const TOUR = [1, 2, 3, 7, 8, 9, 12, 13, 14, 15, 17, 18, 20, -1];
 const TOUR_SECONDS = 2.5;
 
 function run(cmd, args) {
@@ -53,6 +53,6 @@ run("pdftoppm", ["-png", "-r", "110", pdf, path.join(PREVIEW, "slide")]);
 
 const slides = fs.readdirSync(PREVIEW).filter((f) => /^slide-.*\.png$/.test(f)).sort().map((f) => path.join(PREVIEW, f));
 imagemagick("montage", [...slides, "-tile", "4x", "-geometry", "440x248+6+6", "-background", "#2A2A2A", path.join(PREVIEW, "overview.png")]);
-const tour = TOUR.map((n) => slides[n - 1]).filter(Boolean);
+const tour = TOUR.map((n) => slides.at(n > 0 ? n - 1 : n)).filter(Boolean);
 imagemagick("convert", ["-delay", String(TOUR_SECONDS * 100), "-loop", "0", ...tour, "-resize", "880x", "-colors", "128", "-layers", "Optimize", path.join(PREVIEW, "tour.gif")]);
 console.log(`${slides.length} slides rendered to ${path.relative(ROOT, PREVIEW)}`);

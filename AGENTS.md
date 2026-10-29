@@ -13,12 +13,12 @@ O [`CONTRIBUTING.md`](CONTRIBUTING.md) descreve cada variável de `brand.css` e 
 1. **Junte as fontes da marca.** Peça o site do evento, o manual de marca, os posts ou o logo. Tire as cores e as fontes dessas fontes; não invente uma paleta. Se faltar alguma coisa, pergunte.
 2. **Pergunte o que você não sabe.** Datas, cidade, endereço do código de conduta, nome curto: pergunte à pessoa ou confira no site do evento. Não invente nenhum desses dados.
 3. **Copie `events/python-cerrado-2026/`** para `events/<evento>-<ano>/`. Essa pasta tem só os arquivos obrigatórios.
-4. **Escreva `brand.css`.** Ponha cada cor da marca no papel que combina com ela: o fundo da marca em `--bg`, a cor mais forte em `--fill`. Calcule o contraste de cada par da tabela do `CONTRIBUTING.md`, nas duas versões. Se um par fica abaixo do mínimo, ajuste o tom da cor só o necessário e explique a troca num comentário curto no `brand.css`.
+4. **Escreva `brand.css`.** Ponha cada cor da marca no papel que combina com ela: o fundo da marca em `--bg`, a cor mais forte em `--fill`. Rode `npm run check`: o script calcula o contraste de cada par da tabela do `CONTRIBUTING.md`, nas duas versões. Se um par fica abaixo do mínimo, ajuste o tom da cor só o necessário e explique a troca num comentário curto no `brand.css`.
 5. **Escreva `event.json`** com os textos do evento.
 6. **Prepare os logos** em PNG com fundo transparente: um para o fundo escuro e outro para o claro. Use as peças da marca como estão: sem distorcer, sem recolorir fora da paleta e sem efeitos. Se o evento só tem um logo, pergunte se ele serve nos dois fundos.
 7. **Baixe as fontes** em `.ttf` para `fonts/<Fonte>/`, com o arquivo de licença. Use fontes com licença livre, como as do Google Fonts. Ponha o `@import` do Google Fonts no topo de `brand.css`, para o Marp.
 8. **Gere e confira** com `npm run build -- <evento>`. Olhe `dist/<evento>/preview/escuro/overview.png` e `dist/<evento>/preview/claro/overview.png`, e abra `dist/<evento>/marp/index.html`. Procure texto ilegível, texto cortado e logo deformado.
-9. **Mostre o resultado à pessoa** antes de abrir a pull request: as duas visões gerais e a tabela de contraste.
+9. **Mostre o resultado à pessoa** antes de abrir a pull request: as duas visões gerais e a saída de `npm run check`.
 
 Os extras opcionais (`extra.js` e `marp/`) servem para peças que só aquele evento tem, como figurinhas. A pasta `events/python-brasil-2026/` mostra como usar esses extras.
 

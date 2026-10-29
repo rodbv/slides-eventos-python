@@ -13,7 +13,7 @@ Cada evento é uma pasta em `events/`, e um evento novo chega como uma pull requ
 3. Em `event.json`, troque os textos e os caminhos dos logos (veja [Os textos](#os-textos)).
 4. Em `assets/`, coloque o logo em PNG com fundo transparente, numa versão para o fundo escuro e noutra para o fundo claro.
 5. Em `fonts/`, coloque os arquivos `.ttf` das fontes e a licença de cada uma. Use fontes com licença livre, como a SIL Open Font License.
-6. Gere os arquivos e confira as prévias (veja [Gerar e conferir](#gerar-e-conferir)).
+6. Rode `npm run check` para conferir o contraste das cores, gere os arquivos e confira as prévias (veja [Gerar e conferir](#gerar-e-conferir)).
 7. Abra a pull request. O GitHub Actions gera os arquivos de todos os eventos; na página da execução, o artefato `github-pages` traz o site completo para conferir.
 
 A pasta `events/python-brasil-2026/` mostra os extras opcionais: figurinhas, marca-d'água e um slide só do evento.
@@ -39,7 +39,7 @@ A pasta `events/python-brasil-2026/` mostra os extras opcionais: figurinhas, mar
 
 `--fill` e `--on-fill` são os mesmos nas duas versões, então ficam só no `:root`.
 
-Todo texto precisa de contraste de 4,5:1 com o fundo (WCAG 2.1 AA), nas duas versões. Se uma cor da marca não chega lá, escureça ou clareie a cor só o necessário e explique a troca num comentário em `brand.css`, como faz `events/python-cerrado-2026/brand.css`. O [verificador do WebAIM](https://webaim.org/resources/contrastchecker/) calcula o contraste de um par de cores.
+Todo texto precisa de contraste de 4,5:1 com o fundo (WCAG 2.1 AA), nas duas versões. Se uma cor da marca não chega lá, escureça ou clareie a cor só o necessário e explique a troca num comentário em `brand.css`, como faz `events/python-cerrado-2026/brand.css`. `npm run check` calcula o contraste de cada par da tabela, nas duas versões, e falha se algum par fica abaixo do mínimo. O GitHub Actions roda essa verificação antes do build.
 
 ## Os textos
 

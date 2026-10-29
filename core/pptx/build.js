@@ -767,8 +767,10 @@ fill(s, {
 
 s = slide("Referências", ESCURO);
 s.addText("Referências", { placeholder: "title" });
+// About 70 characters fit on a line at 18 pt; a longer reference puts its address on the next line.
+const REFERENCE_LINE = 70;
 const reference = ([name, url], i, all) => [
-  { text: name + "  ", options: {} },
+  { text: name + "  ", options: { breakLine: name.length + url.length + 2 > REFERENCE_LINE } },
   link(url, LINK_ON_DARK, { breakLine: i < all.length - 1 }),
 ];
 s.addText([

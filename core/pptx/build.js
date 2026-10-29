@@ -744,7 +744,7 @@ s = slide("Destaque", ESCURO);
 fill(s, {
   title: "Sua palestra é para todo mundo",
   body: bullets([
-    "O público inclui crianças: conteúdo para todas as idades",
+    "O público inclui pessoas de todas as idades e grupos",
     "Humor que não ridiculariza ninguém, exemplos sem estereótipos",
     "Na dúvida sobre algum conteúdo, a organização ajuda",
   ]),

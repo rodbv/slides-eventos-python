@@ -1,15 +1,16 @@
-/* Python Cerrado 2026: marrom, creme, verde e ocre, do site pythoncerrado.org/2026. */
+/* Python Cerrado 2026: verde, ocre, marrom e creme, do site pythoncerrado.org/2026 e dos posts do evento. */
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap");
 
+/* O verde do evento um tom mais fechado: no #0F6B55 dos posts, o texto ocre fica em 3,5:1. */
 :root {
-  --bg: #3b2a1e;
-  --text: #f4f1ea;
-  --muted: #d9c9b6;
-  --accent: #6fcfae;
-  --link: #7fd6b8;
-  --card: #4a3627;
-  --card-outline: #6b5440;
-  --image-outline: #6b5440;
+  --bg: #0b5443;
+  --text: #ffffff;
+  --muted: #d6efe6;
+  --accent: #f2b544;
+  --link: #f2b544;
+  --card: #094536;
+  --card-outline: #3e8a73;
+  --image-outline: #3e8a73;
   --fill: #f2b544;
   --on-fill: #3b2a1e;
   --fill-edge: #f2b544;

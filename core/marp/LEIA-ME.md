@@ -15,6 +15,7 @@ Este pacote é um modelo para o [Marp](https://marp.app/). A palestra fica em `s
 - `img/`: logos, imagens de exemplo, o gráfico e o QR code. As imagens `*-exemplo.png` marcam o lugar de uma imagem sua.
 - `scripts/qr.py`: gera o QR code do encerramento (`uv run scripts/qr.py https://seu-endereco`).
 - `scripts/grafico.py`: gera o gráfico de exemplo; troque os rótulos e os valores pelos seus dados.
+- `AGENTS.md`: instruções para um agente de IA (Claude Code, Cursor, Copilot) que ajuda você a montar a palestra sem mexer no tema.
 
 ## Exportar
 

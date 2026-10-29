@@ -105,6 +105,9 @@ fs.writeFileSync(path.join(STAGE, css), theme("escuro"));
 fs.writeFileSync(path.join(STAGE, lightCss), theme("claro"));
 copyTemplate(path.join(__dirname, "slides.md"), path.join(STAGE, "slides.md"));
 copyTemplate(path.join(__dirname, "LEIA-ME.md"), path.join(STAGE, "LEIA-ME.md"));
+// AGENTS.md guides an AI agent that helps the speaker write the talk; Claude Code reads it through CLAUDE.md.
+copyTemplate(path.join(__dirname, "AGENTS.md"), path.join(STAGE, "AGENTS.md"));
+fs.writeFileSync(path.join(STAGE, "CLAUDE.md"), "@AGENTS.md\n");
 for (const script of ["qr.py", "grafico.py"]) copyTemplate(path.join(__dirname, "scripts", script), path.join(STAGE, "scripts", script));
 
 for (const dir of [path.join(__dirname, "img"), path.join(EVENT_MARP, "img")]) {

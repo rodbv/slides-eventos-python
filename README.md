@@ -28,3 +28,13 @@ npm run build -- python-cerrado-2026  # um evento
 ```
 
 Os arquivos saem em `dist/`.
+
+## O seu evento quer um modelo?
+
+Um evento novo é uma pasta em `events/`, enviada numa pull request. O [`CONTRIBUTING.md`](CONTRIBUTING.md) mostra o passo a passo. Se você usa um agente de IA, o [`AGENTS.md`](AGENTS.md) traz as instruções para o agente criar a pasta do evento.
+
+## Licenças
+
+- Modelo, textos de exemplo e código deste repositório: [CC0 1.0](LICENSE) (domínio público). Use, mude e compartilhe sem pedir permissão nem dar crédito.
+- Logos, ilustrações e identidade visual de cada evento pertencem ao evento e ficam aqui só para os modelos desse evento. A identidade visual da Python Brasil 2026 é de [Ana Terhorst](https://anaterhorstdesign.com), para a APyB. A marca da Python Cerrado 2026 é da Python Cerrado.
+- Fontes: cada pasta `events/*/fonts/` traz a licença da fonte (SIL Open Font License 1.1).

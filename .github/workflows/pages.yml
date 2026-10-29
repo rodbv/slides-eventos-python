@@ -1,0 +1,64 @@
+# Builds every event and publishes the site on GitHub Pages at every push to main:
+# dist/index.html lists the events, and dist/<event>/ holds that event's downloads.
+name: pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      # uv runs the Python scripts that draw each event's chart and QR code.
+      - uses: astral-sh/setup-uv@v6
+
+      # Ubuntu's own LibreOffice leaves empty image placeholders out of the PDF previews,
+      # so the build uses the current version from the LibreOffice PPA.
+      - name: Install LibreOffice, poppler, ImageMagick and zip
+        run: |
+          sudo add-apt-repository -y ppa:libreoffice/ppa
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libreoffice-impress poppler-utils imagemagick zip
+          soffice --version
+
+      # LibreOffice lays out and embeds the fonts installed on the machine.
+      - name: Install the event fonts
+        run: |
+          mkdir -p ~/.local/share/fonts
+          find events -name '*.ttf' -exec cp {} ~/.local/share/fonts/ \;
+          fc-cache -f
+
+      - run: npm ci
+      - run: npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

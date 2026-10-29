@@ -85,10 +85,10 @@ footer { margin-top: 48px; color: var(--muted); font-size: 16px; }
 <p class="data">${escape(dateLine(e))}</p>
 <p>Que bom que você vai palestrar! Cada slide do modelo mostra um layout e traz dicas nas anotações. Use as que servirem para você.</p>
 <h2>Escolha a versão</h2>
-<p>Tela de LED do tamanho de uma parede: a versão escura, que não ofusca o público. Projetor, TV ou monitor: a versão clara. O código fica em fundo claro nas duas.</p>
+<p>Projetor, TV ou monitor: a versão clara. Tela de LED do tamanho de uma parede: a versão escura, que não ofusca o público. O código fica em fundo claro nas duas.</p>
 <div class="versoes">
-${version("escuro", "Versão escura")}
 ${version("claro", "Versão clara")}
+${version("escuro", "Versão escura")}
 </div>
 <h2>Em Markdown, com o Marp</h2>
 ${list([

@@ -1,7 +1,7 @@
 ---
 marp: true
-# Versão escura: {{tema}}. Versão clara, para projetor, TV ou monitor: {{tema}}-claro.
-theme: {{tema}}
+# Versão clara, para projetor, TV ou monitor: {{tema}}-claro. Versão escura, para tela de LED: {{tema}}.
+theme: {{tema}}-claro
 lang: pt-BR
 paginate: true
 footer: {{rodape}}
@@ -24,8 +24,7 @@ Modelo de slides da {{nome}}
 - Que bom que você vai palestrar! O seu jeito de falar vale mais do que qualquer dica deste modelo.
 - Este arquivo é um modelo: cada slide de exemplo mostra um layout e traz dicas nas anotações. Use as que servirem para você.
 - Para começar: guarde uma cópia sem mudanças e copie os slides que quiser usar. O comentário _class no topo de cada slide escolhe o layout.
-- A linha theme, no topo do arquivo, escolhe a versão: {{tema}} é a escura, {{tema}}-claro é a clara. Tela de LED do tamanho de uma parede: versão escura, que não ofusca o público. Projetor, TV ou monitor: versão clara.
-- No dia, vale testar os slides no projetor ou no monitor da sala. No HTML exportado, a tecla D troca entre a versão escura e a clara: use a que ficar mais legível ali.
+- A linha theme, no topo do arquivo, escolhe a versão: {{tema}}-claro é a clara, {{tema}} é a escura. Projetor, TV ou monitor: versão clara. Tela de LED do tamanho de uma parede: versão escura, que não ofusca o público.
 - Ao reaproveitar um slide, apague estas anotações e escreva as suas.
 -->
 
@@ -36,9 +35,11 @@ Modelo de slides da {{nome}}
 # A sala está torcendo por você.
 
 Cada slide deste modelo traz dicas nas anotações: aperte P para ver.
+Aperte D para trocar entre a versão clara e a escura.
 
 <!--
 - Uma ideia por slide, em até duas linhas. Que frase o público deve levar da sala?
+- No dia, vale testar a versão clara e a escura no projetor ou no monitor da sala: a tecla D troca entre elas no HTML exportado.
 - Quase toda pessoa palestrante fica nervosa. Se bater o nervosismo, fale para um rosto amigo na plateia.
 -->
 

@@ -10,6 +10,12 @@ const REPO = "https://github.com/rodbv/slides-eventos-python";
 
 const escape = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
+// The cover badge reads "14 a 19\nde outubro\nde 2026\n{Floripa/SC}"; its last line is the place.
+function dateLine(e) {
+  const lines = e.selo.replace(/[{}]/g, "").split("\n");
+  return `${lines.slice(0, -1).join(" ")} · ${lines.at(-1)}`;
+}
+
 function eventSlugs() {
   return fs
     .readdirSync(path.join(ROOT, "events"))
@@ -67,7 +73,7 @@ footer { margin-top: 48px; color: var(--muted); font-size: 16px; }
   const body = `<main>
 <img class="logo" src="logo.png" alt="${escape(ev.logo.alt)}">
 <h1>Modelo de slides da ${escape(e.nome)}</h1>
-<p class="data">${escape(e.selo.replace(/\n/g, " ").replace(/[{}]/g, ""))}</p>
+<p class="data">${escape(dateLine(e))}</p>
 <p>Que bom que você vai palestrar! Cada slide do modelo mostra um layout e traz dicas nas anotações. Use as que servirem para você.</p>
 <h2>Baixe o modelo</h2>
 <ul class="arquivos">
@@ -100,7 +106,7 @@ li strong { display: block; font-size: 20px; margin-top: 12px; }
 li span { color: var(--muted); }
 </style>`;
   const cards = sorted
-    .map(({ event: e, slug, light }) => `<li><a href="${slug}/" style="background: #${light.bg}; color: #${light.text}"><img src="${slug}/logo.png" alt=""><strong>${escape(e.nome)}</strong><span style="color: #${light.muted}">${escape(e.selo.replace(/\n/g, " ").replace(/[{}]/g, ""))}</span></a></li>`)
+    .map(({ event: e, slug, light }) => `<li><a href="${slug}/" style="background: #${light.bg}; color: #${light.text}"><img src="${slug}/logo.png" alt=""><strong>${escape(e.nome)}</strong><span style="color: #${light.muted}">${escape(dateLine(e))}</span></a></li>`)
     .join("\n");
   const body = `<main>
 <h1>Modelos de slides para eventos da comunidade Python</h1>

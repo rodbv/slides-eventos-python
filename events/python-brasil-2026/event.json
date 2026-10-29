@@ -1,0 +1,13 @@
+{
+  "nome": "Python Brasil 2026",
+  "nomeCurto": "Python Brasil",
+  "selo": "14 a 19\nde outubro\nde 2026\n{Floripa/SC}",
+  "site": "https://2026.pythonbrasil.org.br/",
+  "rodape": "Python Brasil 2026",
+  "organizacao": "Comunidade Python Brasil",
+  "titulosMaiusculos": true,
+  "corDestaque": "verde limão",
+  "conduta": { "de": "da Python Brasil", "endereco": "python.org.br/cdc" },
+  "logo": { "escuro": "assets/lockup-on-dark.png", "claro": "assets/lockup-on-light.png", "alt": "python brasil 2026" },
+  "marcaDagua": { "escuro": "assets/witch-light.png", "claro": "assets/witch-dark.png" }
+}

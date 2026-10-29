@@ -1,6 +1,7 @@
 // Speaker notes, one list of short tips per slide, in deck order.
 // build.js takes the next list each time it adds a slide and fails if the counts differ.
-module.exports = [
+// The event's own texts and colors come from its event.json and brand.css.
+module.exports = (ev, brand) => [
   // 1 Capa
   [
     "Que bom que você vai palestrar! O seu jeito de falar vale mais do que qualquer dica deste modelo.",
@@ -77,7 +78,6 @@ module.exports = [
   // 14 Números em destaque
   [
     "Até três números, cada um com um rótulo do que mede.",
-    "O círculo pixelado é uma figurinha: arraste para outro número ou apague.",
   ],
   // 15 Três cartões
   [
@@ -93,7 +93,7 @@ module.exports = [
   // 17 Gráfico
   [
     "PowerPoint: botão direito no gráfico > Editar Dados. LibreOffice: clique duas vezes no gráfico e use Exibir > Tabela de dados.",
-    "O Google Slides importa o gráfico como imagem. Lá, crie o seu em Inserir > Gráfico e pinte as barras de verde limão (#B7FF06).",
+    `O Google Slides importa o gráfico como imagem. Lá, crie o seu em Inserir > Gráfico e pinte as barras de ${ev.corDestaque} (#${brand.fill}).`,
     "Um gráfico, uma mensagem: diga em voz alta o que o público deve ver nas barras.",
     "Escreva os números do gráfico no texto alternativo, para leitores de tela.",
   ],
@@ -109,7 +109,7 @@ module.exports = [
   ],
   // 20 Destaque, código de conduta
   [
-    "O código de conduta da Python Brasil vale para todas as pessoas no evento, inclusive no palco: python.org.br/cdc.",
+    `O código de conduta ${ev.conduta.de} vale para todas as pessoas no evento, inclusive no palco: ${ev.conduta.endereco}.`,
     "Se você sofrer ou presenciar assédio, discriminação ou humilhação, procure a Equipe de Resposta.",
   ],
   // 21 Referências
@@ -158,7 +158,7 @@ module.exports = [
   ],
   // 30 Citação clara
   [
-    "No fundo branco, destaque a palavra principal com o marca-texto verde limão e mantenha o texto preto.",
+    `No fundo claro, destaque a palavra principal com o marca-texto ${ev.corDestaque} e mantenha a cor do texto.`,
     "O lema da comunidade Python Brasil desde 2016.",
   ],
   // 31 Frase clara
@@ -167,9 +167,9 @@ module.exports = [
   ],
   // 32 Destaque claro
   [
-    "O painel verde limão guarda a mensagem que a sala não pode perder, com até quatro tópicos curtos ao lado.",
+    `O painel ${ev.corDestaque} guarda a mensagem que a sala não pode perder, com até quatro tópicos curtos ao lado.`,
     "Para quem está começando, “é só” e “todo mundo sabe” soam como “você deveria saber”.",
-    "Para muita gente, a Python Brasil é a primeira conferência; um exemplo do dia a dia ajuda quem chegou agora.",
+    `Para muita gente, a ${ev.nomeCurto} é a primeira conferência; um exemplo do dia a dia ajuda quem chegou agora.`,
   ],
   // 33 Três cartões claro
   [
@@ -194,12 +194,6 @@ module.exports = [
   [
     "Nas perguntas, repita cada pergunta no microfone, para a sala e a gravação.",
     "“Não sei, posso ver e te respondo depois” é uma boa resposta. Uma pergunta que desrespeita o código de conduta não precisa de resposta.",
-    "Da organização: ficamos muito felizes por ter você na Python Brasil 2026. Conte com a gente: estamos aqui para apoiar você e torcer por você.",
-  ],
-  // 38 Figurinhas
-  [
-    "Copie uma figurinha e cole no seu slide. Para mudar o tamanho sem deformar, arraste um canto segurando Shift.",
-    "A figurinha marca-texto é um realce: troque a palavra dela ou aplique o realce verde limão #B7FF06 numa palavra sua.",
-    "Uma figurinha por slide costuma bastar.",
+    `Da organização: ficamos muito felizes por ter você na ${ev.nome}. Conte com a gente: estamos aqui para apoiar você e torcer por você.`,
   ],
 ];

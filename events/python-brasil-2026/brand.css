@@ -1,0 +1,32 @@
+/* Python Brasil 2026: preto, off-white e verde limão, do brandboard de Ana Terhorst. */
+@import url("https://fonts.googleapis.com/css2?family=Cascadia+Mono:wght@400;700&family=Roboto:ital,wght@0,400;0,700;1,400&display=swap");
+
+:root {
+  --bg: #0f0f0f;
+  --text: #e8f4ba;
+  --muted: #ababab;
+  --accent: #b7ff06;
+  --link: #d26cc9;
+  --card: #242424;
+  --card-outline: #3a3a3a;
+  --image-outline: #3a3a3a;
+  --fill: #b7ff06;
+  --on-fill: #0f0f0f;
+  --fill-edge: #b7ff06;
+  --font-head: "Cascadia Mono", monospace;
+  --font-body: "Roboto", sans-serif;
+  --font-code: "Cascadia Mono", monospace;
+}
+
+/* Limão como cor de texto some no branco (1,2:1): no claro, o destaque é preto e o limão leva borda preta. */
+section.light {
+  --bg: #ffffff;
+  --text: #0f0f0f;
+  --muted: #4a4a4a;
+  --accent: #0f0f0f;
+  --link: #bf2eb2;
+  --card: #e8f4ba;
+  --card-outline: #c9d9a0;
+  --image-outline: #c8c8c8;
+  --fill-edge: #0f0f0f;
+}

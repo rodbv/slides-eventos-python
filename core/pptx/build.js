@@ -1,5 +1,7 @@
-// Builds dist/pybr2026-template.pptx: a themed deck whose layouts carry the
-// Python Brasil 2026 brand, with one example slide per layout.
+// Builds dist/<event>/<event>.pptx: a themed deck whose layouts carry the brand of the
+// event folder given as the first argument, with one example slide per layout.
+//
+//   node core/pptx/build.js python-brasil-2026
 const path = require("path");
 const fs = require("fs");
 const pptxgen = require("pptxgenjs");
@@ -10,37 +12,43 @@ const { continueNumbering } = require("./lib/numbering");
 const { fixNotes } = require("./lib/notes");
 const { plainCategories } = require("./lib/charts");
 const { highlightCode, CODE_TEXT_COLOR } = require("./lib/highlight");
+const { loadEvent } = require("./event");
 
 const ROOT = path.resolve(__dirname, "../..");
-const BRAND = path.join(ROOT, "events", "python-brasil-2026", "assets");
-const DIST = path.join(ROOT, "dist");
-const BUILD = path.join(ROOT, "build");
-const OUT = path.join(DIST, "pybr2026-template.pptx");
+const SLUG = process.argv[2];
+if (!SLUG) throw new Error("usage: node core/pptx/build.js <event folder name>");
+const EVENT = loadEvent(ROOT, SLUG);
+const EV = EVENT.event;
+const DIST = path.join(ROOT, "dist", SLUG);
+const BUILD = path.join(ROOT, "build", SLUG);
+const OUT = path.join(DIST, `${SLUG}.pptx`);
 
+const BRAND_DARK = EVENT.dark;
+const BRAND_LIGHT = EVENT.light;
+// Office theme slots: the scheme colors let a speaker restyle the deck from the theme menu.
 const THEME = {
-  name: "Python Brasil 2026",
-  headFontFace: "Cascadia Mono",
-  // Cores do brandboard: preto, off white, verde cítrico e violeta, com os tons de apoio.
-  bodyFontFace: "Roboto",
+  name: EV.nome,
+  headFontFace: EVENT.fonts.head,
+  bodyFontFace: EVENT.fonts.body,
+  codeFontFace: EVENT.fonts.code,
   colors: {
-    dk1: "0F0F0F", // preto (fundo escuro, texto no claro)
-    lt1: "FFFFFF", // branco (fundo claro)
-    dk2: "1A1A1A", // quase preto de apoio
-    lt2: "E8F4BA", // off white (texto no escuro, cartões no claro)
-    accent1: "B7FF06", // verde cítrico: texto só sobre escuro; preenchimento com texto preto em ambos
-    accent2: "BF2EB2", // violeta: links e destaques sobre fundo claro (4,9:1)
-    accent3: "D26CC9", // violeta claro do brandboard: links sobre fundo escuro (6,1:1)
-    accent4: "E7E7E7", // cinza claro de apoio
-    accent5: "ABABAB", // cinza: texto secundário sobre fundo escuro
-    accent6: "4A4A4A", // grafite: texto secundário sobre fundo claro
-    hlink: "D26CC9",
-    folHlink: "BF2EB2",
+    dk1: BRAND_LIGHT.text,
+    lt1: BRAND_LIGHT.bg,
+    dk2: BRAND_DARK.bg,
+    lt2: BRAND_DARK.text,
+    accent1: BRAND_DARK.fill,
+    accent2: BRAND_LIGHT.link,
+    accent3: BRAND_DARK.link,
+    accent4: BRAND_LIGHT.card,
+    accent5: BRAND_DARK.muted,
+    accent6: BRAND_LIGHT.muted,
+    hlink: BRAND_DARK.link,
+    folHlink: BRAND_LIGHT.link,
   },
 };
 const HEX = THEME.colors;
-// Links are underlined brand violet. On black the violet falls to 3.9:1, so dark slides use its light tint.
-const LINK_ON_DARK = HEX.accent3;
-const LINK_ON_LIGHT = HEX.accent2;
+const LINK_ON_DARK = BRAND_DARK.link;
+const LINK_ON_LIGHT = BRAND_LIGHT.link;
 
 const W = 10;
 const H = 5.625;
@@ -60,16 +68,16 @@ const shotBox = (i) => ({ x: M + i * (SHOT.w + SHOT_GAP), y: BODY.y, ...SHOT });
 const TEXT_W = 8.0; // keeps body lines under about 60 characters at 20 pt
 const FOOTER_Y = 5.15;
 const LANG = "pt-BR";
-const NOTES = require(`./notes.${LANG}.js`);
+const NOTES = require(`./notes.${LANG}.js`)(EV, BRAND_DARK);
 const { CAPS_SPACING, capitalizeMarkedRuns } = require("./lib/caps");
 
 const pres = new pptxgen();
 pres.layout = "LAYOUT_16x9";
 pres.theme = { headFontFace: THEME.headFontFace, bodyFontFace: THEME.bodyFontFace };
-pres.title = "Python Brasil 2026: modelo de apresentação";
-pres.subject = "Modelo de slides para palestrantes e organização da Python Brasil 2026";
-pres.author = "Comunidade Python Brasil";
-pres.company = "Python Brasil 2026";
+pres.title = `${EV.nome}: modelo de apresentação`;
+pres.subject = `Modelo de slides para palestrantes e organização da ${EV.nome}`;
+pres.author = EV.organizacao;
+pres.company = EV.nome;
 pres.lang = LANG;
 const C = pres.SchemeColor;
 
@@ -82,62 +90,58 @@ function resized(src, size) {
   return out;
 }
 
-// Two color modes share every layout definition. Lime fills (discs, table header, text
-// highlight) carry black text in both modes; as a text color, lime is used only on dark.
-const DARK = {
-  suffix: "",
-  bg: HEX.dk1,
-  text: C.background2,
-  textHex: HEX.lt2,
-  muted: C.accent5,
-  mutedHex: HEX.accent5,
-  cardHex: "242424",
-  outlineHex: "3A3A3A",
-  limeEdgeHex: HEX.accent1,
-  accent: C.accent1,
-  accentHex: HEX.accent1,
-  watermark: resized(path.join(BRAND, "witch-light.png"), { height: 700 }),
-  lockup: resized(path.join(BRAND, "lockup-on-dark.png"), { width: 1600 }),
-  lockupSmall: resized(path.join(BRAND, "lockup-on-dark.png"), { width: 440 }),
-};
-const LIGHT = {
-  suffix: " (claro)",
-  bg: "FFFFFF",
-  text: C.text1,
-  textHex: HEX.dk1,
-  muted: C.accent6,
-  mutedHex: HEX.accent6,
-  cardHex: HEX.lt2,
-  outlineHex: "C9D9A0",
-  // Lime on white is 1.2:1, so lime shapes get a black edge, as the brand's stickers do.
-  limeEdgeHex: HEX.dk1,
-  // On white, the brand's own pages use black text with lime fills, so the accent is black.
-  accent: C.text1,
-  accentHex: HEX.dk1,
-  watermark: resized(path.join(BRAND, "witch-dark.png"), { height: 700 }),
-  lockup: resized(path.join(BRAND, "lockup-on-light.png"), { width: 1600 }),
-  lockupSmall: resized(path.join(BRAND, "lockup-on-light.png"), { width: 440 }),
-};
-const LIME = HEX.accent1;
-const ON_LIME = HEX.dk1;
+// A brand color that sits in a theme slot is written as that scheme color, so it follows
+// theme edits; any other color is written as hex.
+const SLOT_SCHEME = { dk1: C.text1, lt1: C.background1, lt2: C.background2, dk2: C.text2, accent1: C.accent1, accent2: C.accent2, accent3: C.accent3, accent4: C.accent4, accent5: C.accent5, accent6: C.accent6 };
+function scheme(hex) {
+  const slot = Object.keys(SLOT_SCHEME).find((k) => HEX[k] === hex);
+  return slot ? SLOT_SCHEME[slot] : hex;
+}
+
+// Two color modes share every layout definition. Fills (discs, table header, text
+// highlight) carry the on-fill text color in both modes.
+function mode(brand, suffix, side) {
+  const logo = EVENT.logo[side];
+  const watermark = EVENT.watermark && EVENT.watermark[side];
+  return {
+    suffix,
+    bg: brand.bg,
+    text: scheme(brand.text),
+    textHex: brand.text,
+    muted: scheme(brand.muted),
+    mutedHex: brand.muted,
+    cardHex: brand.card,
+    outlineHex: brand["card-outline"],
+    imageOutlineHex: brand["image-outline"],
+    limeEdgeHex: brand["fill-edge"],
+    accent: scheme(brand.accent),
+    accentHex: brand.accent,
+    watermark: watermark && resized(watermark.file, { height: 700 }),
+    watermarkRatio: watermark && 1 / watermark.ratio,
+    lockup: resized(logo.file, { width: 1600 }),
+    lockupSmall: resized(logo.file, { width: 440 }),
+  };
+}
+const DARK = mode(BRAND_DARK, "", "dark");
+const LIGHT = mode(BRAND_LIGHT, " (claro)", "light");
+const LIME = BRAND_DARK.fill;
+const ON_LIME = BRAND_DARK["on-fill"];
+const TITLE_SPACING = EV.titulosMaiusculos ? { charSpacing: CAPS_SPACING } : {};
 
 // ---------- layout building blocks ----------
 
-const MAGO_RATIO = 1520 / 1982;
-const WITCH_RATIO = 1600 / 1374;
-const LOCKUP_RATIO = 1190 / 2400;
-const PIXEL_CIRCLE_RATIO = 350 / 650;
+const LOCKUP_RATIO = EVENT.logo.dark.ratio;
 
 // Content slides carry the event name as quiet text; the logo itself appears only on the
 // cover, section and closing slides, where it does not compete with the content.
 function footer(mode, x = M) {
-  return [{ text: { text: "Python Brasil 2026", options: { x, y: FOOTER_Y - 0.07, w: 3, h: 0.3, fontSize: 12, color: mode.mutedHex, fontFace: THEME.headFontFace, margin: 0, valign: "middle", lang: LANG } } }];
+  return [{ text: { text: EV.rodape, options: { x, y: FOOTER_Y - 0.07, w: 3, h: 0.3, fontSize: 12, color: mode.mutedHex, fontFace: THEME.headFontFace, margin: 0, valign: "middle", lang: LANG } } }];
 }
 
 const BRAND_LOCKUP_W = 1.1;
 function brandFooter(mode) {
   const h = BRAND_LOCKUP_W * LOCKUP_RATIO;
-  return [{ image: { x: M, y: H - 0.25 - h, w: BRAND_LOCKUP_W, h, path: mode.lockupSmall, altText: "python brasil 2026" } }];
+  return [{ image: { x: M, y: H - 0.25 - h, w: BRAND_LOCKUP_W, h, path: mode.lockupSmall, altText: EVENT.logo.alt } }];
 }
 
 function slideNumber(mode) {
@@ -152,7 +156,7 @@ function ph(name, type, box, text, options = {}) {
 // has no all-caps option, so the 1 pt letter spacing marks these runs for lib/caps.js.
 const TITLE_RULE_Y = 1.15;
 function titlePh(mode, box = TITLE, text = "Título do slide") {
-  return ph("title", "title", box, text, { fontSize: 28, bold: true, color: mode.text, align: "left", valign: "bottom", fit: "shrink", charSpacing: CAPS_SPACING });
+  return ph("title", "title", box, text, { fontSize: 28, bold: true, color: mode.text, align: "left", valign: "bottom", fit: "shrink", ...TITLE_SPACING });
 }
 
 function titleRule(mode, x = 0) {
@@ -179,7 +183,7 @@ function surface(mode, kind, box, options = {}) {
 }
 
 // Light slides frame images in gray: the green card outline would tint the photo edge.
-function imagePh(mode, name, box, text = "Clique no ícone ou arraste uma imagem", outlineHex = mode === LIGHT ? "C8C8C8" : mode.outlineHex) {
+function imagePh(mode, name, box, text = "Clique no ícone ou arraste uma imagem", outlineHex = mode.imageOutlineHex) {
   return ph(name, "pic", box, text, { fontSize: 14, color: mode.muted, align: "center", valign: "middle", fill: { color: mode.cardHex }, line: { color: outlineHex, width: 1 } });
 }
 
@@ -207,7 +211,7 @@ function defineTitledLayout(name, mode, objects) {
 // ---------- layouts ----------
 
 function coverLockup(mode, { x = W - M - 4.0, y = 2.2, w = 4.0 } = {}) {
-  return [{ image: { x, y, w, h: w * LOCKUP_RATIO, path: mode.lockup, altText: "python brasil 2026" } }];
+  return [{ image: { x, y, w, h: w * LOCKUP_RATIO, path: mode.lockup, altText: EVENT.logo.alt } }];
 }
 
 for (const mode of [DARK, LIGHT]) {
@@ -220,7 +224,7 @@ for (const mode of [DARK, LIGHT]) {
       ...coverLockup(mode),
       // The date sits in its own text box: an ellipse only lays text out in its inscribed rectangle.
       shape("ellipse", { x: W - M - dateD, y: 0.3, w: dateD, h: dateD }, LIME),
-      { text: { text: "14 a 19\nde outubro\nde 2026\n{Floripa/SC}", options: { x: W - M - dateD, y: 0.3, w: dateD, h: dateD, fontSize: 14, bold: true, fontFace: THEME.headFontFace, color: ON_LIME, align: "center", valign: "middle", margin: 0, isTextBox: true, lang: LANG } } },
+      { text: { text: EV.selo, options: { x: W - M - dateD, y: 0.3, w: dateD, h: dateD, fontSize: 14, bold: true, fontFace: THEME.headFontFace, color: ON_LIME, align: "center", valign: "middle", margin: 0, isTextBox: true, lang: LANG } } },
       ph("title", "title", { x: M, y: 0.6, w: 4.6, h: 2.6 }, "Título da palestra", { fontSize: 36, bold: true, color: mode.accent, align: "left", valign: "bottom", fit: "shrink" }),
       ph("subtitle", "body", { x: M, y: 3.35, w: 4.6, h: 0.5 }, "Subtítulo ou frase de efeito", { fontSize: 20, color: mode.text, fit: "shrink" }),
       ph("speaker", "body", { x: M, y: 4.0, w: 4.6, h: 0.5 }, "Nome da pessoa palestrante · @usuario", { fontSize: 18, bold: true, color: mode.text, fit: "shrink" }),
@@ -238,7 +242,7 @@ for (const mode of [DARK, LIGHT]) {
       ph("title", "title", { x: M, y: 0.8, w: closeW, h: 1.4 }, "Valeu!", { fontSize: 44, bold: true, color: mode.accent, align: "left", valign: "bottom", fit: "shrink" }),
       bodyPh(mode, "body", { x: M, y: 2.4, w: closeW, h: 2.3 }, "Contatos: handle, e-mail, site", { bullet: false }),
       // On white slides the QR code's own white margin frames it, so a green outline would show as a stray line.
-      imagePh(mode, "qr", { x: qrX, y: 0.55, w: qrD, h: qrD }, "QR code com o link dos slides", mode === LIGHT ? "FFFFFF" : mode.outlineHex),
+      imagePh(mode, "qr", { x: qrX, y: 0.55, w: qrD, h: qrD }, "QR code com o link dos slides", mode === LIGHT ? mode.bg : mode.outlineHex),
       ph("qrCaption", "body", { x: qrX, y: 0.55 + qrD + 0.1, w: qrD, h: 0.8 }, "endereço.com.br/slides", { fontSize: 16, color: mode.text, fontFace: THEME.headFontFace, align: "center", fit: "shrink" }),
     ],
   });
@@ -251,9 +255,9 @@ for (const mode of [DARK, LIGHT]) {
   // Seção: disco limão com o número, título à direita, dragão translúcido ao fundo
   const secD = 1.9;
   const markH = 2.6;
-  const watermark = { image: { x: W - markH * WITCH_RATIO + 0.5, y: H - markH + 0.25, w: markH * WITCH_RATIO, h: markH, path: mode.watermark, transparency: 88 } };
+  const watermark = mode.watermark ? [{ image: { x: W - markH * mode.watermarkRatio + 0.5, y: H - markH + 0.25, w: markH * mode.watermarkRatio, h: markH, path: mode.watermark, transparency: 88 } }] : [];
   defineBrandLayout("Seção", mode, [
-    watermark,
+    ...watermark,
     shape("ellipse", { x: M, y: 1.85, w: secD, h: secD }, LIME),
     ph("number", "body", { x: M, y: 1.85, w: secD, h: secD }, "01", { fontSize: 40, bold: true, color: ON_LIME, align: "center", valign: "middle", fontFace: THEME.headFontFace }),
     ph("title", "title", { x: M + secD + 0.4, y: 1.6, w: 4.6, h: 2.4 }, "Título da seção", { fontSize: 34, bold: true, color: mode.text, align: "left", valign: "middle", fit: "shrink" }),
@@ -306,7 +310,7 @@ for (const mode of [DARK, LIGHT]) {
 
   // Código: cartão claro em ambos os modos, porque código se lê melhor em fundo claro
   const codeCard = (box) => shape("roundRect", box, "FFFFFF", { rectRadius: 0.1, line: { color: "D0D7DE", width: 1 } });
-  const codePh = (name, box, text) => ph(name, "body", box, text, { fontSize: 15, color: CODE_TEXT_COLOR, fontFace: THEME.headFontFace, paraSpaceAfter: 0, lineSpacing: 17, fit: "shrink" });
+  const codePh = (name, box, text) => ph(name, "body", box, text, { fontSize: 15, color: CODE_TEXT_COLOR, fontFace: THEME.codeFontFace, paraSpaceAfter: 0, lineSpacing: 17, fit: "shrink" });
   const codeH = 2.85;
   defineTitledLayout("Código", mode, [
     titlePh(mode),
@@ -338,7 +342,7 @@ for (const mode of [DARK, LIGHT]) {
   // Frase: uma ideia só, grande, como "Perguntas?"
   // No slide number: the witch watermark fills that corner.
   defineLayout("Frase", mode, [
-    watermark,
+    ...watermark,
     ph("title", "title", { x: M, y: 0.9, w: TEXT_W, h: 3.4 }, "Uma frase só", { fontSize: 48, bold: true, color: mode.accent, align: "left", valign: "middle", fit: "shrink" }),
   ], { slideNumber: undefined });
 
@@ -387,14 +391,13 @@ for (const mode of [DARK, LIGHT]) {
     objects: [
       { rect: { x: 0, y: 0, w: panelW, h: H, fill: { color: LIME }, line: { color: LIME, width: 0 } } },
       ...footer(mode, highlightX),
-      ph("title", "title", { x: M, y: 0.7, w: panelW - 2 * M, h: 3.6 }, "Uma mensagem importante", { fontSize: 30, bold: true, color: ON_LIME, align: "left", valign: "middle", fit: "shrink", charSpacing: CAPS_SPACING }),
+      ph("title", "title", { x: M, y: 0.7, w: panelW - 2 * M, h: 3.6 }, "Uma mensagem importante", { fontSize: 30, bold: true, color: ON_LIME, align: "left", valign: "middle", fit: "shrink", ...TITLE_SPACING }),
       bodyPh(mode, "body", { x: highlightX, y: 0.7, w: W - highlightX - M, h: 3.9 }, "Até quatro tópicos curtos", { valign: "middle" }),
     ],
   });
 
   if (mode === DARK) {
-    // The stickers slide closes the deck: title only, no footer or slide number.
-    pres.defineSlideMaster({ title: "Figurinhas", background: { color: mode.bg }, objects: [titleRule(mode), titlePh(mode)] });
+    if (EVENT.extra && EVENT.extra.layouts) EVENT.extra.layouts(context(mode));
 
     pres.defineSlideMaster({
       title: "Imagem cheia",
@@ -413,12 +416,26 @@ for (const mode of [DARK, LIGHT]) {
 // teaches the layouts and the craft at the same time.
 
 let notesUsed = 0;
-function slide(layout, section) {
+// Event slides from extra.js bring their own tips; the template slides take the next list from the notes file.
+function slide(layout, section, ownTips) {
   const s = pres.addSlide({ masterName: layout, sectionTitle: section });
-  const tips = NOTES[notesUsed++];
+  const tips = ownTips || NOTES[notesUsed++];
   if (!tips) throw new Error(`notes.${LANG}.js has no notes for slide ${notesUsed}`);
   s.addNotes(tips.map((tip) => `• ${tip}`).join("\n"));
   return s;
+}
+
+// What extra.js can use to draw in the template's style.
+function context(mode) {
+  return { pres, EVENT, THEME, LANG, W, H, M, LIME, ON_LIME, LINK_ON_DARK, LINK_ON_LIGHT, LOCKUP_RATIO, mode, DARK, LIGHT, resized, slide, link, marked, titlePh, titleRule, path };
+}
+
+// extra.js can add a picture to a template slide, with tips about it.
+function decorate(id, sl) {
+  const hook = EVENT.extra && EVENT.extra.decorate && EVENT.extra.decorate[id];
+  if (!hook) return;
+  const tips = hook(sl, context(DARK)) || [];
+  if (tips.length) sl.addNotes(tips.map((tip) => `\n• ${tip}`).join(""));
 }
 
 function bullets(items) {
@@ -460,7 +477,7 @@ function coverSlide(mode, section, title, subtitle) {
 
 const QR_PATH = path.join(BUILD, "qr-exemplo.png");
 const QR_BOX = { x: W - M - 3.3, y: 0.55, w: 3.3, h: 3.3 }; // same box as the layout's qr placeholder
-const QR_URL = "https://2026.pythonbrasil.org.br/";
+const QR_URL = EV.site;
 
 // pptxgenjs writes into the options it receives, so each slide gets its own copy.
 const contacts = (mode) => [
@@ -553,7 +570,7 @@ pres.addSection({ title: ESCURO });
 
 coverSlide(DARK, ESCURO,
   "Título da sua palestra",
-  "Modelo de slides da Python Brasil 2026");
+  `Modelo de slides da ${EV.nome}`);
 
 let s = slide("Frase", ESCURO);
 fill(s, { title: "A sala está torcendo por você." });
@@ -654,8 +671,7 @@ s = codeSlide("Código", ESCURO, [
   link("slidesnippet.com", LINK_ON_DARK),
   { text: ", tema GitHub Light." },
 ]);
-// The wizard sticker from the stickers slide, in the empty corner of the code card, as an example of use.
-s.addImage({ path: resized(path.join(BRAND, "sticker-mago.png"), { width: 600 }), x: 8.2, y: 2.75, w: 1.6 * MAGO_RATIO, h: 1.6, altText: "Figurinha do mago digitando no teclado" });
+decorate("codigo", s);
 
 const LONG_CODE = `from dataclasses import dataclass
 from datetime import datetime, timedelta
@@ -699,8 +715,7 @@ s.addText("Três números que ajudam", { placeholder: "title" });
 [["18", "pontos de letra: dá para ler do fundo da sala"], ["1", "ensaio em voz alta mostra o tempo real"], ["5", "minutos para perguntas no fim"]].forEach(([v, l], i) => {
   fill(s, { [`value${i + 1}`]: v, [`label${i + 1}`]: l });
 });
-// The pixel circle from the stickers slide, around the middle number, as an example of use.
-s.addImage({ path: path.join(BRAND, "pixel-circle.png"), x: 4.1, y: 2.0, w: 1.8, h: 1.2, altText: "Círculo pixelado limão em volta do número 1" });
+decorate("numeros", s);
 
 s = slide("Três cartões", ESCURO);
 s.addText("Antes de subir ao palco", { placeholder: "title" });
@@ -712,7 +727,7 @@ s.addText("Antes de subir ao palco", { placeholder: "title" });
 
 s = slide("Somente título", ESCURO);
 s.addText("O seu dia de palestra", { placeholder: "title" });
-const tableHead = { bold: true, color: HEX.dk1, fill: { color: HEX.accent1 } };
+const tableHead = { bold: true, color: ON_LIME, fill: { color: LIME } };
 const tableCell = { color: DARK.textHex, fill: { color: DARK.cardHex } };
 const row = (cells, options) => cells.map((text) => ({ text, options }));
 s.addTable(
@@ -727,7 +742,7 @@ s.addTable(
       ["Depois", "Publicar os slides no link do QR code"],
     ].map((cells) => row(cells, tableCell)),
   ],
-  { x: M, y: BODY.y, w: W - 2 * M, colW: [2.2, 6.8], fontSize: 18, fontFace: THEME.bodyFontFace, rowH: 0.48, border: { type: "solid", pt: 1, color: HEX.dk1 }, margin: 0.08, valign: "middle", lang: LANG }
+  { x: M, y: BODY.y, w: W - 2 * M, colW: [2.2, 6.8], fontSize: 18, fontFace: THEME.bodyFontFace, rowH: 0.48, border: { type: "solid", pt: 1, color: DARK.bg }, margin: 0.08, valign: "middle", lang: LANG }
 );
 
 chartSlide(DARK, ESCURO);
@@ -737,7 +752,7 @@ flowSlide(DARK, ESCURO, "Um dia de evento", ["Palestras", "Coffee break", "Light
 s = slide("Imagem cheia", ESCURO);
 // The example image fills the placeholder; an empty placeholder would be drawn above the caption.
 exampleImage(s, DARK, "image", "fundo", { x: 0, y: 0, w: W, h: H });
-s.addShape(pres.ShapeType.rect, { x: 0, y: H - 0.9, w: W, h: 0.9, fill: { color: HEX.dk1, transparency: 25 }, line: { color: HEX.dk1, width: 0 }, objectName: "Faixa da legenda" });
+s.addShape(pres.ShapeType.rect, { x: 0, y: H - 0.9, w: W, h: 0.9, fill: { color: DARK.bg, transparency: 25 }, line: { color: DARK.bg, width: 0 }, objectName: "Faixa da legenda" });
 s.addText("Legenda da foto. Foto: Nome da pessoa · CC BY 4.0", { x: M, y: H - 0.75, w: W - 2 * M, h: 0.6, fontSize: 18, color: DARK.textHex, valign: "middle", isTextBox: true, margin: 0, lang: LANG });
 
 s = slide("Destaque", ESCURO);
@@ -757,9 +772,9 @@ const reference = ([name, url], i, all) => [
   link(url, LINK_ON_DARK, { breakLine: i < all.length - 1 }),
 ];
 s.addText([
-  ["Código de conduta da Python Brasil", "python.org.br/cdc"],
+  [`Código de conduta ${EV.conduta.de}`, EV.conduta.endereco],
   ["Código colorido para slides", "slidesnippet.com"],
-  ["Fontes Roboto e Cascadia Mono", "fonts.google.com"],
+  [`Fontes ${[...new Set([THEME.bodyFontFace, THEME.headFontFace, THEME.codeFontFace])].join(" e ")}`, "fonts.google.com"],
   ["Verificador de contraste", "webaim.org/resources/contrastchecker"],
 ].flatMap(reference), { placeholder: "body" });
 
@@ -817,7 +832,7 @@ codeSlide("Código (claro)", CLARO, [
 
 s = slide("Citação (claro)", CLARO);
 // Light slides mark the key word with the lime highlight, as the brand's light pages do.
-const [open, , close] = quoted("", HEX.dk1);
+const [open, , close] = quoted("", LIGHT.accentHex);
 fill(s, { quote: [open, marked("Pessoas"), { text: " > Tecnologia" }, close], author: "Comunidade Python Brasil, 2016" });
 
 s = slide("Frase (claro)", CLARO);
@@ -855,36 +870,7 @@ chartSlide(LIGHT, CLARO);
 
 closingSlide(LIGHT, CLARO, "Valeu!");
 
-// ----- stickers -----
-const FIGURINHAS = "Figurinhas";
-pres.addSection({ title: FIGURINHAS });
-s = slide("Figurinhas", FIGURINHAS);
-s.addText("Figurinhas", { placeholder: "title" });
-// A Florianópolis greeting for whoever reads the template to the end.
-s.addText("Dazumbanho! Chegasse ao fim, ixtepô!", { x: W - M - 6.2, y: 0.45, w: 6.2, h: 0.6, fontSize: 20, bold: true, color: LIME, fontFace: THEME.headFontFace, align: "right", valign: "middle", margin: 0, isTextBox: true, lang: LANG, objectName: "Fim do modelo" });
-const sticker = (file, box, altText) => s.addImage({ path: resized(path.join(BRAND, file), { width: 900 }), ...box, altText });
-const ICON_RATIO = 1058 / 1200;
-sticker("lockup-on-dark.png", { x: M, y: 1.7, w: 2.3, h: 2.3 * LOCKUP_RATIO }, "Logo python brasil 2026 com o dragão");
-sticker("sticker-witch.png", { x: 3.0, y: 1.55, w: 1.4 * (1520 / 1322), h: 1.4 }, "Figurinha da bruxinha surfista com contorno limão");
-sticker("sticker-mago-ola.png", { x: 4.8, y: 1.55, w: 1.4 * (1720 / 1282), h: 1.4 }, "Figurinha do mago dizendo Olá, mundo!, com contorno limão");
-sticker("sticker-mago.png", { x: 6.95, y: 1.5, w: 1.5 * MAGO_RATIO, h: 1.5 }, "Figurinha do mago digitando no teclado, com contorno limão");
-sticker("magia-explosao.png", { x: 8.45, y: 1.75, w: 1.0, h: 1.0 }, "Explosão de magia limão");
-sticker("logo-assinatura.png", { x: M, y: 3.45, w: 2.3, h: 2.3 * (570 / 1200) }, "Assinatura PythonBrasil com o dragão");
-s.addImage({ path: path.join(BRAND, "pixel-circle.png"), x: 3.0, y: 3.45, w: 2.0, h: 2.0 * PIXEL_CIRCLE_RATIO, altText: "Círculo pixelado limão para marcar uma palavra" });
-s.addText("olha aqui", { x: 3.0, y: 3.45, w: 2.0, h: 2.0 * PIXEL_CIRCLE_RATIO, fontSize: 20, bold: true, color: DARK.textHex, fontFace: THEME.headFontFace, align: "center", valign: "middle", margin: 0, isTextBox: true, lang: LANG });
-sticker("icone-seta.png", { x: 7.9, y: 3.6, w: 0.75, h: 0.75 * ICON_RATIO }, "Ícone de seta pixelada sobre quadrado limão");
-sticker("icone-codigo.png", { x: 8.75, y: 3.6, w: 0.75, h: 0.75 * ICON_RATIO }, "Ícone de código pixelado sobre quadrado limão");
-// Credit to the designer of the brand identity, with a link to her site.
-s.addText(
-  [
-    { text: "Identidade visual de Ana Terhorst, " },
-    link("anaterhorstdesign.com", LINK_ON_DARK),
-    { text: ". Valeu, Ana!" },
-  ],
-  { x: M, y: 4.62, w: W - 2 * M, h: 0.35, fontSize: 16, color: DARK.textHex, fontFace: THEME.headFontFace, valign: "middle", margin: 0, isTextBox: true, lang: LANG, objectName: "Crédito da identidade visual" },
-);
-// The marker is the native text highlight, black on lime, so it follows edits and reads on dark and on white slides.
-s.addText([marked("marca-texto")], { x: 5.15, y: 3.65, w: 2.6, h: 0.6, fontSize: 26, fontFace: THEME.headFontFace, align: "center", valign: "middle", margin: 0, isTextBox: true, lang: LANG, objectName: "Marca-texto limão" });
+if (EVENT.extra && EVENT.extra.slides) EVENT.extra.slides(context(DARK));
 
 // ---------- write ----------
 (async () => {
@@ -892,7 +878,7 @@ s.addText([marked("marca-texto")], { x: 5.15, y: 3.65, w: 2.6, h: 0.6, fontSize:
   fs.mkdirSync(BUILD, { recursive: true });
   // pptxgenjs reads image files only when it writes the deck, so the resized images and the QR code can be made here.
   for (const { src, out, size } of RESIZED) await sharp(src).resize(size).png().toFile(out);
-  await QRCode.toFile(QR_PATH, QR_URL, { margin: 2, width: 800, color: { dark: "#0F0F0FFF", light: "#FFFFFFFF" } });
+  await QRCode.toFile(QR_PATH, QR_URL, { margin: 2, width: 800, color: { dark: `#${BRAND_LIGHT.text}FF`, light: "#FFFFFFFF" } });
   if (notesUsed !== NOTES.length) throw new Error(`notes.${LANG}.js has ${NOTES.length} notes for ${notesUsed} slides`);
   await pres.writeFile({ fileName: OUT });
   await applyTheme(OUT, THEME);

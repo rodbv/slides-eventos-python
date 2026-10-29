@@ -93,7 +93,7 @@ ${version("escuro", "Versão escura")}
 <h2>Em Markdown, com o Marp</h2>
 ${list([
   [`${slug}-marp.zip`, "Marp (.zip)", "As duas versões num pacote para o VS Code com a extensão Marp. A linha theme, no topo de slides.md, escolhe a versão."],
-  ["marp/", "Os slides no navegador", "A tecla D troca entre escuro e claro, e a tecla P abre as anotações."],
+  ["marp/", "Os slides no navegador", "A tecla D troca entre claro e escuro. A tecla P abre as anotações em outra aba; para voltar aos slides, feche essa aba."],
 ])}
 <footer><a href="../">Outros eventos</a> · <a href="${REPO}">Código do modelo</a></footer>
 </main>`;

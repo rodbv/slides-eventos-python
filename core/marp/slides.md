@@ -34,11 +34,12 @@ Modelo de slides da {{nome}}
 
 # A sala está torcendo por você.
 
-Cada slide deste modelo traz dicas nas anotações: aperte P para ver.
+Aperte P para ver as dicas de cada slide, em outra aba.
 Aperte D para trocar entre a versão clara e a escura.
 
 <!--
 - Uma ideia por slide, em até duas linhas. Que frase o público deve levar da sala?
+- A tecla P abre a visão de apresentação em outra aba, com as anotações, o próximo slide e o cronômetro. As duas abas andam juntas: o slide que você passa numa aba também passa na outra. Para voltar aos slides, feche a aba da visão de apresentação ou volte para a aba anterior.
 - No dia, vale testar a versão clara e a escura no projetor ou no monitor da sala: a tecla D troca entre elas no HTML exportado.
 - Quase toda pessoa palestrante fica nervosa. Se bater o nervosismo, fale para um rosto amigo na plateia.
 -->
@@ -90,7 +91,7 @@ Dicas, <mark>não regras</mark>: use as que servirem para você.
 <!--
 - De três a cinco tópicos por slide. Se o texto não couber, divida o conteúdo em dois slides.
 - As anotações aparecem só para você na visão de apresentação. Olhar as anotações no palco é normal.
-- No HTML exportado, aperte P: a visão de apresentação mostra as anotações, o próximo slide e o cronômetro.
+- No HTML exportado, aperte P: a visão de apresentação abre em outra aba, com as anotações, o próximo slide e o cronômetro. No palco, deixe a aba dos slides no telão e a visão de apresentação na tela do seu computador.
 -->
 
 ---

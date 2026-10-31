@@ -109,7 +109,11 @@ ul.arquivos li { background: var(--card); border: 1px solid var(--line); border-
 ul.arquivos a { font-weight: 700; font-size: 20px; }
 ul.arquivos span { display: block; color: var(--muted); }
 footer { margin-top: 48px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; color: var(--muted); font-size: 16px; }
+footer .aviso { flex-basis: 100%; margin: 0; }
 </style>`;
+  // The templates are gifts from the community, so the page says so unless event.json brings its own notice.
+  const noticeText = e.aviso || `Este modelo não é oficial. Ele foi feito pela comunidade, de presente para a ${e.nomeCurto}, sem pedido nem revisão da organização do evento. O logo e as cores são da ${e.nomeCurto}.`;
+  const notice = `<p class="aviso">${escape(noticeText)}</p>\n`;
   const body = `<main>
 <header>
 ${ev.watermark ? `<img class="marca" src="marca-dagua.png" alt="">` : ""}
@@ -129,7 +133,9 @@ ${list([
   [`${slug}-marp.zip`, "Marp (.zip)", "As duas versões num pacote para o VS Code com a extensão Marp. A linha theme, no topo de slides.md, escolhe a versão."],
   ["marp/", "Os slides no navegador", "A tecla D troca entre claro e escuro. A tecla P abre as anotações em outra aba; para voltar aos slides, feche essa aba."],
 ])}
-<footer>${REPO_LINK}<a href="../">Outros eventos</a></footer>
+<footer>
+${notice}${REPO_LINK}<a href="../">Outros eventos</a>
+</footer>
 </main>`;
   fs.writeFileSync(path.join(DIST, slug, "index.html"), page(`Slides da ${e.nome}`, fontImport(ev.dir) + "\n" + style, body));
 }
@@ -157,6 +163,7 @@ ${REPO_STYLE}
   const body = `<main>
 <h1>Modelos de slides para eventos da comunidade Python</h1>
 <p>Cada evento tem o seu modelo, em PowerPoint, LibreOffice e Markdown (Marp), com dicas para quem vai palestrar nas anotações de cada slide.</p>
+<p>Os modelos não são oficiais. Eles foram feitos pela comunidade, de presente para cada evento, sem pedido nem revisão das organizações. Logos e cores são dos eventos.</p>
 <ul>
 ${cards}
 </ul>

@@ -13,5 +13,6 @@
     "claro": "https://docs.google.com/presentation/d/1CwIsZVshYZQcmvY3dEWjABGNSApM9yWbZ9l4E-K0xmU/copy",
     "escuro": "https://docs.google.com/presentation/d/1c_yHoUi1NuDl18J1elToXNz-l1saSnd74kfvsgUEP5I/copy"
   },
-  "logo": { "escuro": "assets/logo-escuro.png", "claro": "assets/logo-claro.png", "alt": "Python Cerrado" }
+  "logo": { "escuro": "assets/logo-escuro.png", "claro": "assets/logo-claro.png", "alt": "Python Cerrado" },
+  "marcaDagua": { "escuro": "assets/arvore-escuro.png", "claro": "assets/arvore-claro.png" }
 }

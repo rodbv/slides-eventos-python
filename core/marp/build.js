@@ -131,10 +131,7 @@ fs.mkdirSync(path.join(DIST, "marp"), { recursive: true });
 marp(["-o", path.join(DIST, "marp", "index.html"), path.join(STAGE, "slides.md")]);
 fs.cpSync(path.join(STAGE, "img"), path.join(DIST, "marp", "img"), { recursive: true });
 
-// One PDF per version: slides.md starts in the light theme, and the dark one comes from a copy
-// whose theme line names the dark theme.
-const darkDeck = path.join(STAGE, "..", "slides-escuro.md");
-fs.writeFileSync(darkDeck, fs.readFileSync(path.join(STAGE, "slides.md"), "utf8").replace(/^theme: .*$/m, `theme: ${SLUG}`));
+// One PDF per version: slides.md starts in the light theme, and --theme overrides it for the dark one.
 marp(["--pdf", "-o", path.join(DIST, `${SLUG}-claro.pdf`), path.join(STAGE, "slides.md")]);
-marp(["--pdf", "-o", path.join(DIST, `${SLUG}-escuro.pdf`), darkDeck]);
+marp(["--theme", SLUG, "--pdf", "-o", path.join(DIST, `${SLUG}-escuro.pdf`), path.join(STAGE, "slides.md")]);
 console.log(`wrote dist/${SLUG}/marp/index.html, the two PDFs and ${PACKAGE_NAME}.zip`);

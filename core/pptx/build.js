@@ -224,16 +224,20 @@ function coverLockup(mode, { x = W - M - 4.0, y = 2.2, w = 4.0 } = {}) {
 }
 
 for (const mode of [DARK, LIGHT]) {
-  // Capa: o disco limão com a data repete o selo da página do evento
+  // Capa: o disco limão com a data repete o selo da página do evento.
+  // With a pill in event.json, the cover slide carries the talk's day and time instead.
   const dateD = 1.7;
+  const seal = EV.pilula ? [] : [
+    // The date sits in its own text box: an ellipse only lays text out in its inscribed rectangle.
+    shape("ellipse", { x: W - M - dateD, y: 0.3, w: dateD, h: dateD }, LIME),
+    { text: { text: EV.selo, options: { x: W - M - dateD, y: 0.3, w: dateD, h: dateD, fontSize: 14, bold: true, fontFace: THEME.headFontFace, color: ON_LIME, align: "center", valign: "middle", margin: 0, isTextBox: true, lang: LANG } } },
+  ];
   pres.defineSlideMaster({
     title: "Capa" + mode.suffix,
     background: { color: mode.bg },
     objects: [
       ...coverLockup(mode),
-      // The date sits in its own text box: an ellipse only lays text out in its inscribed rectangle.
-      shape("ellipse", { x: W - M - dateD, y: 0.3, w: dateD, h: dateD }, LIME),
-      { text: { text: EV.selo, options: { x: W - M - dateD, y: 0.3, w: dateD, h: dateD, fontSize: 14, bold: true, fontFace: THEME.headFontFace, color: ON_LIME, align: "center", valign: "middle", margin: 0, isTextBox: true, lang: LANG } } },
+      ...seal,
       ph("title", "title", { x: M, y: 0.6, w: 4.6, h: 2.6 }, "Título da palestra", { fontSize: 36, bold: true, color: mode.accent, align: "left", valign: "bottom", fit: "shrink" }),
       ph("subtitle", "body", { x: M, y: 3.35, w: 4.6, h: 0.5 }, "Subtítulo ou frase de efeito", { fontSize: 20, color: mode.text, fit: "shrink" }),
       ph("speaker", "body", { x: M, y: 4.0, w: 4.6, h: 0.5 }, "Nome da pessoa palestrante · @usuario", { fontSize: 18, bold: true, color: mode.text, fit: "shrink" }),
@@ -436,14 +440,14 @@ function slide(layout, section, ownTips) {
 
 // What extra.js can use to draw in the template's style.
 function context(mode) {
-  return { pres, EVENT, THEME, LANG, W, H, M, LIME, ON_LIME, LINK_ON_DARK, LINK_ON_LIGHT, LOCKUP_RATIO, mode, DARK, LIGHT, resized, slide, link, marked, titlePh, titleRule, path };
+  return { pres, EVENT, THEME, LANG, W, H, M, LIME, ON_LIME, LINK_ON_DARK, LINK_ON_LIGHT, LOCKUP_RATIO, mode, DARK, LIGHT, resized, slide, link, marked, pill, titlePh, titleRule, path };
 }
 
 // extra.js can add a picture to a template slide, with tips about it.
 function decorate(id, sl) {
   const hook = EVENT.extra && EVENT.extra.decorate && EVENT.extra.decorate[id];
   if (!hook) return;
-  const tips = hook(sl, context(DARK)) || [];
+  const tips = hook(sl, context(MODE)) || [];
   if (tips.length) sl.addNotes(tips.map((tip) => `\n• ${tip}`).join(""));
 }
 
@@ -482,6 +486,15 @@ function coverSlide(mode, section, title, subtitle) {
     subtitle,
     speaker: [{ text: "Seu nome aqui", options: { bold: true } }, { text: "  ·  @seu_usuario", options: { bold: false, color: mode.mutedHex } }],
   });
+  if (EV.pilula) {
+    pill(sl, mode, EV.pilula, { x: W - M - 2.7, y: 0.45, w: 2.7, h: 0.56 }, { fontSize: 20, objectName: "Pílula de dia e hora" });
+    sl.addNotes("\n• A pílula mostra o dia e a hora da sua palestra: troque o texto pelos do seu horário.");
+  }
+}
+
+// The pill swaps --accent and --bg, which already have 4.5:1 between them.
+function pill(sl, mode, text, box, options = {}) {
+  sl.addText(text, { shape: pres.ShapeType.roundRect, rectRadius: box.h / 2, ...box, fill: { color: mode.accentHex }, line: { color: mode.accentHex, width: 0 }, fontSize: 16, bold: true, color: mode.bg, fontFace: THEME.headFontFace, align: "center", valign: "middle", margin: 0, isTextBox: true, lang: LANG, ...options });
 }
 
 const QR_PATH = path.join(BUILD, "qr-exemplo.png");
@@ -500,6 +513,7 @@ function closingSlide(mode, section, title, body = contacts(mode)) {
   // The caption tells the speaker to replace the QR code; on their slides it holds the link.
   fill(sl, { title, body, qrCaption: "Troque pelo seu QR code:\ncontato, slides ou site" });
   sl.addImage({ placeholder: "qr", path: QR_PATH, ...QR_BOX, altText: `QR code para ${QR_URL}` });
+  decorate("encerramento", sl);
   return sl;
 }
 
@@ -592,6 +606,7 @@ fill(s, {
   bio: bullets(["Quem abre a sessão costuma apresentar você", "Com o tempo curto, este slide pode sair", "Uma autodescrição ajuda quem não vê"]),
 });
 exampleImage(s, MODE, "photo", "foto", PHOTO);
+decorate("palestrante", s);
 
 s = slide("Citação" + MODE.suffix, EXEMPLOS);
 fill(s, {

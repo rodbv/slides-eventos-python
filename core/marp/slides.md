@@ -12,7 +12,7 @@ title: {{nome}}
 <!-- _paginate: false -->
 <!-- _footer: "" -->
 
-<div class="selo">{{selo}}</div>
+{{capa:selo}}
 
 # Título da sua palestra
 

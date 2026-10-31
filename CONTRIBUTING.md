@@ -48,6 +48,7 @@ Todo texto precisa de contraste de 4,5:1 com o fundo (WCAG 2.1 AA), nas duas ver
 | `nome` | Nome completo, como "Python Cerrado 2026" |
 | `nomeCurto` | Nome sem o ano, usado nas dicas |
 | `selo` | Texto do disco da capa, uma linha por `\n`; a última linha, entre chaves, é o local |
+| `pilula` | Opcional. Texto de exemplo da pílula com o dia e a hora da palestra, como "Sáb, 07/11 · 15:30". Com este campo, a capa mostra a pílula no lugar do selo |
 | `site` | Endereço do evento, usado no QR code de exemplo |
 | `rodape` | Texto do rodapé dos slides |
 | `rodapeLogo` | Opcional. Com `true`, os slides de conteúdo mostram o logo pequeno no lugar do texto do rodapé |
@@ -61,7 +62,7 @@ Todo texto precisa de contraste de 4,5:1 com o fundo (WCAG 2.1 AA), nas duas ver
 
 ## Extras opcionais
 
-- `extra.js` acrescenta peças ao .pptx: `layouts` define layouts novos, `decorate.codigo` e `decorate.numeros` põem uma imagem nesses slides, e `slides` acrescenta slides no fim do deck.
+- `extra.js` acrescenta peças ao .pptx: `layouts` define layouts novos, `decorate.codigo`, `decorate.numeros`, `decorate.palestrante` e `decorate.encerramento` põem peças nesses slides, e `slides` acrescenta slides no fim do deck.
 - `marp/` acrescenta peças ao Marp: `codigo.md` vai no slide de código, `fim.md` vira o último slide, `extra.css` vai no fim do tema e `img/` vai para a pasta de imagens do pacote.
 
 ## Gerar e conferir

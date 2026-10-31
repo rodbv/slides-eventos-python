@@ -38,7 +38,8 @@ const VALUES = {
   nome: EV.nome,
   nomeCurto: EV.nomeCurto,
   rodape: EV.rodape,
-  selo: EV.selo.replace(/\n/g, "<br>"),
+  // With a pill in event.json, the cover shows the talk's day and time in place of the event's date disc.
+  "capa:selo": EV.pilula ? `<span class="pilula">${EV.pilula}</span>` : `<div class="selo">${EV.selo.replace(/\n/g, "<br>")}</div>`,
   site: EV.site,
   siteCurto: EV.site.replace(/^https?:\/\//, "").replace(/\/$/, ""),
   "conduta.de": EV.conduta.de,

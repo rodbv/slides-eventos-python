@@ -38,22 +38,6 @@ section.figurinhas .arvore {
   background-image: var(--arvore);
 }
 
-/* A pílula de data dos posts: verde no claro e ocre no escuro, onde a verde some no fundo. */
-.pilula {
-  display: inline-block;
-  padding: 0.3em 1.1em;
-  border-radius: 999px;
-  background: var(--fill);
-  color: var(--on-fill);
-  font-family: var(--font-head);
-  font-weight: 700;
-}
-
-section.light .pilula {
-  background: var(--accent);
-  color: #ffffff;
-}
-
 /* O rótulo acima do título, em caixa alta, como "PALESTRA" nos posts. */
 .rotulo {
   color: var(--accent);
@@ -69,4 +53,24 @@ section.light .pilula {
   width: 110px;
   height: 9px;
   background: var(--fill);
+}
+
+/* A barra ocre curta dos posts separa o nome do resto no slide da pessoa palestrante e no encerramento. */
+section.palestrante > h3::after,
+section.encerramento > h1::after {
+  content: "";
+  display: block;
+  width: 110px;
+  height: 9px;
+  margin-top: 24px;
+  background: var(--fill);
+}
+
+/* A pílula com a versão do Python fica na linha do título do slide de código. */
+section > p:has(> .pilula:only-child) {
+  position: absolute;
+  top: 52px;
+  right: 64px;
+  margin: 0;
+  font-size: 24px;
 }

@@ -10,7 +10,7 @@
 
 <!--
 - Copie a linha da figurinha para o seu slide.
-- A pílula, o rótulo e a barra vêm dos posts da Python Cerrado: troque o texto e use no slide de abertura ou de seção.
+- A pílula, o rótulo e a barra vêm dos posts da Python Cerrado. A pílula e a barra já aparecem na capa, no código e nos slides com o seu nome; o rótulo cabe acima do título da capa ou de uma seção.
 - A figurinha marca-texto é um realce: troque a palavra dela, ou use <mark>palavra</mark> numa palavra sua.
 - Uma figurinha por slide costuma bastar.
 -->

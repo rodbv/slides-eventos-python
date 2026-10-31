@@ -1,0 +1,72 @@
+/* A árvore translúcida do logo no canto das seções e das frases. */
+:root {
+  --marca-dagua: url("img/marca-dagua-escuro.png");
+  --arvore: url("img/arvore-escuro.png");
+}
+
+section.light {
+  --marca-dagua: url("img/marca-dagua-claro.png");
+  --arvore: url("img/arvore-claro.png");
+}
+
+/* ---------- figurinhas ----------
+ * ## Figurinhas
+ * <span class="logo"></span> <span class="arvore"></span> <span class="pilula">Sáb, 07/11 · 15:30</span>
+ */
+section.figurinhas > p {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 28px 48px;
+  margin-bottom: 36px;
+}
+
+section.figurinhas .logo,
+section.figurinhas .arvore {
+  display: inline-block;
+  background: var(--lockup) center / contain no-repeat;
+}
+
+section.figurinhas .logo {
+  width: 300px;
+  height: 105px;
+}
+
+section.figurinhas .arvore {
+  width: 186px;
+  height: 200px;
+  background-image: var(--arvore);
+}
+
+/* A pílula de data dos posts: verde no claro e ocre no escuro, onde a verde some no fundo. */
+.pilula {
+  display: inline-block;
+  padding: 0.3em 1.1em;
+  border-radius: 999px;
+  background: var(--fill);
+  color: var(--on-fill);
+  font-family: var(--font-head);
+  font-weight: 700;
+}
+
+section.light .pilula {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+/* O rótulo acima do título, em caixa alta, como "PALESTRA" nos posts. */
+.rotulo {
+  color: var(--accent);
+  font-family: var(--font-head);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* A barra ocre curta que separa blocos nos posts. */
+.barra {
+  display: inline-block;
+  width: 110px;
+  height: 9px;
+  background: var(--fill);
+}

@@ -56,6 +56,11 @@ jobs:
         with:
           path: dist
 
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pptx
+          path: dist/*/*.pptx
+
   deploy:
     if: github.event_name != 'pull_request'
     needs: build
@@ -66,3 +71,24 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # The Google Slides copies follow the published site; a failure here leaves the site as it is.
+  google-slides:
+    if: github.event_name != 'pull_request'
+    needs: deploy
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: pptx
+          path: dist
+
+      - run: node scripts/google-slides.js
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}

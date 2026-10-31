@@ -94,4 +94,10 @@ O modelo comum fica em `core/` e vale para todos os eventos. Depois de mudar o m
 
 ## Atualizar a cópia no Google Slides
 
-O build não atualiza o Google Slides. Depois de mudar um .pptx, envie o arquivo para o Drive, abra e escolha Arquivo > Salvar como Apresentações Google. Compartilhe a cópia como "Qualquer pessoa com o link: Leitor" e ponha o link em `googleSlides` no `event.json`, com `/copy` no lugar de `/edit`.
+A cada push no `main`, depois de publicar o site, o GitHub Actions troca o conteúdo de cada arquivo de `googleSlides` pelo .pptx novo, com `scripts/google-slides.js`. O arquivo mantém o endereço, então o link `/copy` não muda. A conta de serviço `google-slides@slides-eventos-python.iam.gserviceaccount.com` faz a troca, com a chave do secret `GOOGLE_SERVICE_ACCOUNT_JSON`.
+
+Para dar a um evento a sua primeira cópia no Google Slides:
+
+1. Envie o .pptx para o Drive, abra e escolha Arquivo > Salvar como Apresentações Google.
+2. Compartilhe a cópia como "Qualquer pessoa com o link: Leitor" e adicione a conta de serviço como Editor.
+3. Ponha o link em `googleSlides` no `event.json`, com `/copy` no lugar de `/edit`.

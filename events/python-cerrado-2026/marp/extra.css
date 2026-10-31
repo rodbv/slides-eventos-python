@@ -21,6 +21,12 @@ section.figurinhas > p {
   margin-bottom: 36px;
 }
 
+section.figurinhas > p:last-of-type {
+  display: block;
+  font-family: var(--font-head);
+  font-size: 22px;
+}
+
 section.figurinhas .logo,
 section.figurinhas .arvore {
   display: inline-block;

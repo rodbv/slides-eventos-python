@@ -8,6 +8,8 @@
 
 <span class="rotulo">Palestra</span> <span class="barra"></span> <mark>marca-texto</mark>
 
+Logo e cores do site da Python Cerrado, mantido pela PloneGov-BR, [plone.org.br](https://plone.org.br). Valeu!
+
 <!--
 - Copie a linha da figurinha para o seu slide.
 - A pílula, o rótulo e a barra vêm dos posts da Python Cerrado. A pílula e a barra já aparecem na capa, no código e nos slides com o seu nome; o rótulo cabe acima do título da capa ou de uma seção.

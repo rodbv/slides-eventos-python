@@ -25,7 +25,7 @@ module.exports = {
     },
   },
 
-  slides({ pres, slide, resized, marked, pill, THEME, LANG, M, LIME, LOCKUP_RATIO, DARK }) {
+  slides({ pres, slide, resized, link, marked, pill, THEME, LANG, W, M, LIME, LINK_ON_DARK, LOCKUP_RATIO, DARK }) {
     const FIGURINHAS = "Figurinhas";
     pres.addSection({ title: FIGURINHAS });
     const s = slide("Figurinhas", FIGURINHAS, [
@@ -43,6 +43,15 @@ module.exports = {
 
     s.addText("PALESTRA", { ...head, x: M, y: 3.55, w: 2.6, h: 0.45, fontSize: 20, bold: true, charSpacing: 2, color: LIME, valign: "middle", objectName: "Rótulo" });
     bar(s, pres, LIME, { x: M, y: 4.2 });
+    // Credit to the site the logo and the colors come from, with a link to its maintainers.
+    s.addText(
+      [
+        { text: "Logo e cores do site da Python Cerrado, mantido pela PloneGov-BR, " },
+        link("plone.org.br", LINK_ON_DARK),
+        { text: ". Valeu!" },
+      ],
+      { ...head, x: M, y: 4.62, w: W - 2 * M, h: 0.35, fontSize: 16, color: DARK.textHex, valign: "middle", objectName: "Crédito da identidade visual" },
+    );
     s.addText([marked("marca-texto")], { ...head, x: 3.55, y: 3.6, w: 2.6, h: 0.6, fontSize: 26, align: "center", valign: "middle", objectName: "Marca-texto ocre" });
   },
 };

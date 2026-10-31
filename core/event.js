@@ -33,6 +33,23 @@ function pngRatio(file) {
   return head.readUInt32BE(20) / head.readUInt32BE(16);
 }
 
+// Tips that state facts about an event or speak for its organizers. The defaults hold for any
+// event; event.json overrides them under "textos", and an empty recadoDaOrganizacao drops that tip.
+const TEXTOS = {
+  duvidas: "Tirar dúvidas com a organização",
+  vespera: "Voz e descanso em dia",
+  antesDaPalestra: "Testar o projetor e o microfone",
+  ajudaNaSala: "Se faltar alguma coisa na sala, como projetor ou microfone, procure a organização do evento.",
+  ajudaConduta: "Se você sofrer ou presenciar assédio, discriminação ou humilhação, procure a organização do evento.",
+  recadoDaOrganizacao: "",
+};
+
+function textos(event, slug) {
+  const unknown = Object.keys(event.textos || {}).filter((key) => !(key in TEXTOS));
+  if (unknown.length) throw new Error(`events/${slug}/event.json: unknown textos ${unknown.join(", ")}; expected ${Object.keys(TEXTOS).join(", ")}`);
+  return { ...TEXTOS, ...event.textos };
+}
+
 function loadEvent(root, slug) {
   const dir = path.join(root, "events", slug);
   const css = fs.readFileSync(path.join(dir, "brand.css"), "utf8");
@@ -44,6 +61,7 @@ function loadEvent(root, slug) {
     fonts[name] = dark[name].replace(/^["']|["'],?.*$/g, "");
   }
   const event = JSON.parse(fs.readFileSync(path.join(dir, "event.json"), "utf8"));
+  event.textos = textos(event, slug);
   const image = (rel) => {
     const file = path.join(dir, rel);
     if (!fs.existsSync(file)) throw new Error(`events/${slug}/${rel} does not exist`);

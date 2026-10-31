@@ -51,6 +51,9 @@ const VALUES = {
   "dark.text": EVENT.dark.text,
   "light.text": EVENT.light.text,
   "light.fill-edge": EVENT.light["fill-edge"],
+  ...Object.fromEntries(Object.entries(EV.textos).map(([key, text]) => [`textos.${key}`, text])),
+  // The organizers' note is a whole list item, so an event without one gets no empty bullet.
+  "textos.recadoDaOrganizacao": EV.textos.recadoDaOrganizacao && `- ${EV.textos.recadoDaOrganizacao}`,
   "extra:codigo": eventFile("codigo.md"),
   "extra:fim": fim && `---\n\n${fim}`,
 };

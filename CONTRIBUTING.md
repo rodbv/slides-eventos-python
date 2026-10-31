@@ -56,6 +56,7 @@ Todo texto precisa de contraste de 4,5:1 com o fundo (WCAG 2.1 AA), nas duas ver
 | `titulosMaiusculos` | Com `true`, os títulos dos slides de conteúdo ficam em maiúsculas |
 | `corDestaque` | Nome da cor de `--fill`, como "ocre", usado nas dicas |
 | `conduta` | `de` ("da Python Cerrado") e `endereco` do código de conduta, sem `https://` |
+| `textos` | Opcional. Dicas que afirmam fatos do evento ou falam pela organização: `duvidas`, `vespera` e `antesDaPalestra` (tabela "O seu dia de palestra"), `ajudaNaSala`, `ajudaConduta` e `recadoDaOrganizacao` (anotações). Sem o campo, os slides usam textos neutros e não têm recado da organização |
 | `logo` | Caminhos do logo para o fundo `escuro` e para o `claro`, e o texto alternativo `alt` |
 | `marcaDagua` | Opcional. Imagens `escuro` e `claro` para a marca-d'água |
 | `googleSlides` | Opcional. Links `/copy` das cópias no Google Slides, `escuro` e `claro` |

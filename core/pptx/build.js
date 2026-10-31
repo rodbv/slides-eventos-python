@@ -758,10 +758,10 @@ s.addTable(
   [
     row(["Quando", "Sugestão"], tableHead),
     ...[
-      ["Antes do evento", "Tirar dúvidas no grupo de palestrantes no Telegram"],
-      ["Na véspera", "Pega leve no karaokê :P Voz e descanso em dia"],
+      ["Antes do evento", EV.textos.duvidas],
+      ["Na véspera", EV.textos.vespera],
       ["No dia", "Chegar cedo e conhecer a sala"],
-      ["15 min antes", "Dar um oi ao voluntariado da sala"],
+      ["15 min antes", EV.textos.antesDaPalestra],
       ["Na palestra", "Microfone perto da boca, mesmo ao olhar para o telão"],
       ["Depois", "Publicar os slides no link do QR code"],
     ].map((cells) => row(cells, tableCell)),

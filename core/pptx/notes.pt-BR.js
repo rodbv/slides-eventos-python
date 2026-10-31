@@ -99,7 +99,7 @@ module.exports = (ev, brand, version) => [
   [
     "Espaço livre para tabelas, gráficos e diagramas.",
     "Testar em casa o adaptador de vídeo e o espelhamento de tela costuma deixar o dia mais tranquilo.",
-    "Cada sala tem alguém do voluntariado. Projetor, microfone, coragem: o que faltar, a gente ajuda.",
+    ev.textos.ajudaNaSala,
     "Depois da palestra, anote o que funcionou, para a próxima. Cansaço depois de palestrar é normal: descanse e aproveite o resto do evento.",
   ],
   // Gráfico
@@ -124,7 +124,7 @@ module.exports = (ev, brand, version) => [
   // Destaque, código de conduta
   [
     `O código de conduta ${ev.conduta.de} vale para todas as pessoas no evento, inclusive no palco: ${ev.conduta.endereco}.`,
-    "Se você sofrer ou presenciar assédio, discriminação ou humilhação, procure a Equipe de Resposta.",
+    ev.textos.ajudaConduta,
     `O painel ${ev.corDestaque} guarda a mensagem que a sala não pode perder, com até quatro tópicos curtos ao lado.`,
     "Para quem está começando, “é só” e “todo mundo sabe” soam como “você deveria saber”. Mostre o passo a passo e explique cada sigla na primeira vez.",
     `Para muita gente, a ${ev.nomeCurto} é a primeira conferência; um exemplo do dia a dia ajuda quem chegou agora.`,
@@ -140,6 +140,6 @@ module.exports = (ev, brand, version) => [
     "Para gerar o QR code no LibreOffice: Inserir > Objeto > Código QR e de barras. Nos outros programas, gere a imagem num site de QR code e substitua esta. Depois, troque a legenda pelo link.",
     "Nas perguntas, repita cada pergunta no microfone, para a sala e a gravação.",
     "“Não sei, posso ver e te respondo depois” é uma boa resposta. Uma pergunta que desrespeita o código de conduta não precisa de resposta.",
-    `Da organização: ficamos muito felizes por ter você na ${ev.nome}. Conte com a gente: estamos aqui para apoiar você e torcer por você.`,
+    ...(ev.textos.recadoDaOrganizacao ? [ev.textos.recadoDaOrganizacao] : []),
   ],
 ];

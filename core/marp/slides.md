@@ -305,17 +305,17 @@ def cabe(palestra, slot):
 
 | Quando | Sugestão |
 |---|---|
-| Antes do evento | Tirar dúvidas no grupo de palestrantes no Telegram |
-| Na véspera | Pega leve no karaokê :P Voz e descanso em dia |
+| Antes do evento | {{textos.duvidas}} |
+| Na véspera | {{textos.vespera}} |
 | No dia | Chegar cedo e conhecer a sala |
-| 15 min antes | Dar um oi ao voluntariado da sala |
+| 15 min antes | {{textos.antesDaPalestra}} |
 | Na palestra | Microfone perto da boca, mesmo ao olhar para o telão |
 | Depois | Publicar os slides no link do QR code |
 
 <!--
 - Tabelas em Markdown já saem com o cabeçalho na cor de destaque.
 - Testar em casa o adaptador de vídeo e o espelhamento de tela costuma deixar o dia mais tranquilo.
-- Cada sala tem alguém do voluntariado. Projetor, microfone, coragem: o que faltar, a gente ajuda.
+- {{textos.ajudaNaSala}}
 - Depois da palestra, anote o que funcionou, para a próxima. Cansaço depois de palestrar é normal: descanse e aproveite o resto do evento.
 -->
 
@@ -378,7 +378,7 @@ Legenda da foto. Foto: Nome da pessoa · CC BY 4.0
 
 <!--
 - O código de conduta {{conduta.de}} vale para todas as pessoas no evento, inclusive no palco: {{conduta.endereco}}.
-- Se você sofrer ou presenciar assédio, discriminação ou humilhação, procure a Equipe de Resposta.
+- {{textos.ajudaConduta}}
 - O painel {{corDestaque}} guarda a mensagem que a sala não pode perder, com até quatro tópicos curtos ao lado.
 - Para quem está começando, “é só” e “todo mundo sabe” soam como “você deveria saber”. Mostre o passo a passo e explique cada sigla na primeira vez.
 - Para muita gente, a {{nomeCurto}} é a primeira conferência; um exemplo do dia a dia ajuda quem chegou agora.
@@ -419,7 +419,7 @@ Troque pelo seu QR code: contato, slides ou site
 - Para gerar o seu QR code: uv run scripts/qr.py https://seu-endereco. O script troca o arquivo img/qr.png. Depois, troque a legenda pelo link.
 - Nas perguntas, repita cada pergunta no microfone, para a sala e a gravação.
 - “Não sei, posso ver e te respondo depois” é uma boa resposta. Uma pergunta que desrespeita o código de conduta não precisa de resposta.
-- Da organização: ficamos muito felizes por ter você na {{nome}}. Conte com a gente: estamos aqui para apoiar você e torcer por você.
+{{textos.recadoDaOrganizacao}}
 -->
 
 {{extra:fim}}

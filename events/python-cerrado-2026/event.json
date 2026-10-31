@@ -10,6 +10,12 @@
   "titulosMaiusculos": false,
   "corDestaque": "ocre",
   "conduta": { "de": "da Python Cerrado", "endereco": "pythoncerrado.org/2026/sobre/codigo-de-conduta" },
+  "textos": {
+    "duvidas": "Tirar dúvidas no grupo do evento",
+    "vespera": "Pega leve no karaokê :P Voz e descanso em dia",
+    "antesDaPalestra": "Dar um oi ao voluntariado da sala",
+    "ajudaNaSala": "Cada sala tem alguém do voluntariado: se faltar projetor, microfone ou outra coisa, fale com essa pessoa."
+  },
   "googleSlides": {
     "claro": "https://docs.google.com/presentation/d/1Kwz7pQuesCLzRSVgsJPGCqjMCY4ifV8BvT4GbNDkRtA/copy",
     "escuro": "https://docs.google.com/presentation/d/1s5Nw3GwX47lk55Kt1uCYo_oxMdWhPHAOP5QVCM3P_LM/copy"
